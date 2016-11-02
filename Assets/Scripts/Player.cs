@@ -8,10 +8,14 @@ public class Player : MonoBehaviour {
 	public float maxSpeed = 10;
 	private bool hasGun = true;
 	private bool hasSword = false;
+	private Quaternion rotation;
+	private GameObject[] BulletPool;
 
 	// Use this for initialization
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
+		BulletPool = new GameObject[20];
+		CreateBulletPool();
 	}
 	
 	// Update is called once per frame
@@ -46,7 +50,23 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	void CreateBulletPool() {
+		for (int i = 0; i < BulletPool.Length; i++) {
+			BulletPool[i] = Instantiate(bullet, new Vector3(-200, -200, 0), Quaternion.identity) as GameObject;
+			BulletPool[i].GetComponent<Bullet>().SetActive(false);
+		}
+	}
+
 	void Shoot() {
-		Instantiate(bullet, this.transform.position, Quaternion.identity);
+		for (int i = 0; i < BulletPool.Length; i++) {
+			if (!BulletPool[i].GetComponent<Bullet>().GetActive()) {
+				BulletPool[i].GetComponent<Bullet>().Spawn();
+				return;
+			}
+		}
+	}
+
+	public Quaternion GetRotation() {
+		return rotation;
 	}
 }
