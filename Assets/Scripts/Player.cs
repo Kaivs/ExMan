@@ -24,14 +24,15 @@ public class Player : MonoBehaviour {
 		// Movement Keys
 		float hInput = Input.GetAxis ("Horizontal");
 		float vInput = Input.GetAxis ("Vertical");
-		Vector3 mousePos = Input.mousePosition;
+		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		bool attack = Input.GetMouseButtonDown(0);
 
 		if(attack) {
 			Attack();
 		}
 
-		transform.LookAt(mousePos);
+		//Rotation to mousePos
+		rb2d.transform.eulerAngles = new Vector3(0,0,Mathf.Atan2((mousePos.y - transform.position.y), (mousePos.x - transform.position.x))*Mathf.Rad2Deg - 90);
 		rb2d.velocity = new Vector2 (hInput * maxSpeed, vInput * maxSpeed);
 	}
 
