@@ -6,8 +6,8 @@ public class Player : MonoBehaviour {
 	private Rigidbody2D rb2d;
 	public GameObject bullet;
 	public float maxSpeed = 10;
-	private bool hasGun = true;
-	private bool hasSword = false;
+	public bool hasGun = true;
+	public bool hasSword = false;
 	private Quaternion rotation;
 	private GameObject[] BulletPool;
 
@@ -43,7 +43,9 @@ public class Player : MonoBehaviour {
 	void Attack() {
 		if (hasGun) {
 			Shoot();
+			GetComponent<Animator>().SetTrigger("shooting");
 		} else if (hasSword) {
+			GetComponent<Animator>().SetTrigger("slashing");
 			//Attack animation for sword
 		} else {
 			//Attack animation for fists
