@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour {
 			m_instance = this;
 		}
 		DontDestroyOnLoad(this.gameObject);
+		//lol
 	}
 	
 	int m_playerBulletPool = 20;
