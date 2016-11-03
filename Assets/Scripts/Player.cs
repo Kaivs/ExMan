@@ -83,7 +83,7 @@ public class Player : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other) {
 		if (attacking) {
 			if (other.gameObject.tag == "Enemy") {
-				// Deal damage
+				// Deal damage to enemy
 			}
 		}
 	}
@@ -98,9 +98,9 @@ public class Player : MonoBehaviour {
 			Shoot();
 			}
 		} else if (hasSword) {
-			// if (swordCounter > 0) {
-			// 	Slash();
-			// }
+			if (swordCounter > 0) {
+				Slash();
+			}
 		} else {
 			//Attack animation for fists
 		}
@@ -130,6 +130,7 @@ public class Player : MonoBehaviour {
 	}
 
 	void Slash() {
+		swordCounter--;
 		attacking = true;
 		attackTimer = Time.time;
 		// GetComponent<Animator>().SetTrigger("slashing");
@@ -139,7 +140,6 @@ public class Player : MonoBehaviour {
 	// Getters / Setters + Pickups
 	// ==================================
 	
-
 	public Quaternion GetRotation() {
 		return rotation;
 	}
@@ -169,14 +169,22 @@ public class Player : MonoBehaviour {
 	}
 
 	public void PickupGun() {
+		if (hasGun) {
+			bulletCounter += 20;
+		} else {
+			bulletCounter = 20;
+		}
 		hasGun = true;
-		bulletCounter += 20;
 		GetComponent<Animator>().SetBool("hasGun", true);
 	}
 
 	public void PickupSword() {
+		if (hasSword) {
+			swordCounter += 20;
+		} else {
+			swordCounter = 20;
+		}
 		hasSword = true;
-		swordCounter += 20;
 		GetComponent<Animator>().SetBool("hasSword", true);
 	}
 }
