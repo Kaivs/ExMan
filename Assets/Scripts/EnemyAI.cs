@@ -3,27 +3,46 @@ using System.Collections;
 
 public class EnemyAI : MonoBehaviour {
 
+
+	// Spawn-related Variable and Accessors/Mutators
+	bool m_isActive;
+	public bool IsActive { get { return m_isActive; } }
+	public void SetActive() { m_isActive = true; }
+	public void SetInactive() { m_isActive = false; }
+
+
 	enum Behaviour { Seek, Attack }
 
-	public Transform m_targetTransform;
-	public Vector3 m_targetPosition;
+	[SerializeField] Transform m_targetTransform;
+	[SerializeField] Vector3 m_targetPosition;
 
-	public float m_speed;
-	public float m_turnSpeed;
+	[SerializeField] float m_speed;
+	[SerializeField] float m_turnSpeed;
 	
-	public int m_damage;
-	public int m_health;
+	[SerializeField] int m_damage;
+	[SerializeField] int m_health;
 
 	// Unity Components
 	Rigidbody2D m_rb2d;
+	Animator m_anim;
 	bool m_isDead;
 
 	void Start() {
 		
-		// Unity Components
-		m_rb2d = GetComponent<Rigidbody2D>();
+		AcquireReference();
+		Initialize();
+	}
 
-		// TODO: Your own initializer
+	void AcquireReference() {
+
+		m_rb2d = GetComponent<Rigidbody2D>();
+		m_anim = transform.GetChild(0).GetComponent<Animator>();
+	}
+
+	void Initialize() {
+
 		m_isDead = false;
 	}
+
+
 }
