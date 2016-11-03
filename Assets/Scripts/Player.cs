@@ -8,8 +8,11 @@ public class Player : MonoBehaviour {
 	public float maxSpeed = 10;
 	private bool hasGun = true;
 	private bool hasSword = false;
+	public bool takingDamage = false;
 	private Quaternion rotation;
 	private GameObject[] BulletPool;
+	public int Health = 12;	
+	public int Weapon;
 
 	// Use this for initialization
 	void Start () {
@@ -64,6 +67,10 @@ public class Player : MonoBehaviour {
 				return;
 			}
 		}
+	}
+
+	void TakeDamage(){
+
 	}
 
 	public Quaternion GetRotation() {
