@@ -53,3 +53,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabs:
   - {fileID: 1000010620011338, guid: 9867b7eb587af0542a37f3209d4e4b8d, type: 2}
+  m_gameObjectsPool: {fileID: 0}
