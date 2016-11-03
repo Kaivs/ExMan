@@ -32,6 +32,7 @@ public class EnemyAI : MonoBehaviour {
 		AcquireReference();
 		Initialize();
 	}
+	//Test
 
 	void AcquireReference() {
 
