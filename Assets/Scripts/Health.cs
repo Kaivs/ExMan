@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class Health : MonoBehaviour {
-
 	private Player pScript;
 	private int healAmount = 1;
 
@@ -12,5 +11,10 @@ public class Health : MonoBehaviour {
 			pScript.AddHealth(healAmount);
 			Destroy(this.gameObject);
 		}
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
 	}
 }

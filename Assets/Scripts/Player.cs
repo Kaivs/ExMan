@@ -5,8 +5,8 @@ public class Player : MonoBehaviour {
 
 	// Base member vars
 	private Rigidbody2D rb2d;
-	private float maxSpeed = 5;
-	private int health = 3;
+	public float maxSpeed = 10;
+	public bool takingDamage = false;
 	private Quaternion rotation;
 	
 
@@ -32,6 +32,8 @@ public class Player : MonoBehaviour {
 	
 	public GameObject bullet;
 	private GameObject[] BulletPool;
+	public int health = 12;	
+	public int Weapon;
 
 	// Main logic 
 	// ==================================
@@ -136,10 +138,13 @@ public class Player : MonoBehaviour {
 		// GetComponent<Animator>().SetTrigger("slashing");
 	}
 
-
 	// Getters / Setters + Pickups
 	// ==================================
 	
+	void TakeDamage(){
+
+	}
+
 	public Quaternion GetRotation() {
 		return rotation;
 	}
