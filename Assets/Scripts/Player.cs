@@ -14,8 +14,7 @@ public class Player : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
-		BulletPool = new GameObject[20];
-		CreateBulletPool();
+		BulletPool = GameManager.Instance.CreateObjectPool("bullet_player", GameManager.Instance.PlayerBulletPool);
 	}
 	
 	// Update is called once per frame
@@ -50,12 +49,15 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	void CreateBulletPool() {
-		for (int i = 0; i < BulletPool.Length; i++) {
-			BulletPool[i] = Instantiate(bullet, new Vector3(-200, -200, 0), Quaternion.identity) as GameObject;
-			BulletPool[i].GetComponent<Bullet>().SetActive(false);
-		}
-	}
+	// -------------------------------------------------------------------
+	// REMOVED: Created a generic CreateObjectPool(...) inside GameManager - by Nestor
+	// -------------------------------------------------------------------
+	// void CreateBulletPool() {
+	// 	for (int i = 0; i < BulletPool.Length; i++) {
+	// 		BulletPool[i] = Instantiate(bullet, new Vector3(-200, -200, 0), Quaternion.identity) as GameObject;
+	// 		BulletPool[i].GetComponent<Bullet>().SetActive(false);
+	// 	}
+	// }
 
 	void Shoot() {
 		for (int i = 0; i < BulletPool.Length; i++) {
