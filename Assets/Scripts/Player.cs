@@ -1,19 +1,22 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Player : MonoBehaviour {
 
 	// Base member vars
 	private Rigidbody2D rb2d;
+	private Slider m_slider;
 	public float maxSpeed = 10;
 	public bool takingDamage = false;
 	private Quaternion rotation;
 	
 
 	// Speed pickup vars
-	private float speedBoostAmount = 5;
-	private float speedBoostTimer = 0;
-	private bool spedUp = false;
+	public float speedBoostAmount = 5;
+	public float speedBoostTimer = 0;
+	public bool spedUp = false;
+	public int pickupSpeed = 0;
 
 
 	//Dmg pickup vars
@@ -24,10 +27,10 @@ public class Player : MonoBehaviour {
 	// Weapon vars
 	public float damage = 1;
 	public bool hasGun = false;
-	private int bulletCounter = 0;
+	public int bulletCounter = 0;
 	public bool hasSword = false;
-	private int swordCounter = 0;
-	private bool attacking = false;
+	public int swordCounter = 0;
+	public bool attacking = false;
 	private float attackTimer = 0;
 	
 	public GameObject bullet;
@@ -40,6 +43,7 @@ public class Player : MonoBehaviour {
 
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
+		m_slider = GetComponent<Slider>();
 		BulletPool = new GameObject[20];
 		CreateBulletPool();
 	}
@@ -63,6 +67,7 @@ public class Player : MonoBehaviour {
 		// Deactivate Speed boost after timer
 		if (spedUp && (Time.time - speedBoostTimer > 10)) {
 			maxSpeed -= speedBoostAmount;
+			pickupSpeed = 0;
 			spedUp = false;
 		}
 
@@ -165,7 +170,7 @@ public class Player : MonoBehaviour {
 		return health;
 	}
 
-	public void SpeedBoost() {
+	public void SpeedBoost() {	
 		spedUp = true;
 		speedBoostTimer = Time.time;
 		maxSpeed += speedBoostAmount;

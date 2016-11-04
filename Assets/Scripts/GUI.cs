@@ -7,6 +7,8 @@ public class GUI : MonoBehaviour {
 	public int m_currentWave;
 	public Sprite[] HeartSprites;
 	public Sprite[] Weapon;
+	public Sprite[] Speed;
+	public Image SpeedUI;
 	public Image HeartUI;
 	public Image WeaponUI;
 
@@ -42,5 +44,6 @@ public class GUI : MonoBehaviour {
 	void Update () {
 		HeartUI.sprite = HeartSprites[m_player.health];
 		WeaponUI.sprite = Weapon[m_player.Weapon];
+		SpeedUI.sprite = Speed[m_player.pickupSpeed];
 	}
 }
