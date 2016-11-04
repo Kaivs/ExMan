@@ -143,7 +143,7 @@ public class Player : MonoBehaviour {
 	}
 
 	// Getters / Setters + Pickups
-	// ==================================
+	// ====================================
 	
 	void TakeDamage(){
 
@@ -176,7 +176,7 @@ public class Player : MonoBehaviour {
 		dmgBoostTimer = Time.time;
 		damage *= dmgBoostAmount;
 	}
-
+ 
 	public void PickupGun() {
 		if (hasGun) {
 			bulletCounter += 20;
