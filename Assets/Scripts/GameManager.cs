@@ -25,13 +25,14 @@ public class GameManager : MonoBehaviour {
 	public GameObject[] prefabs;
 	public Transform m_gameObjectsPool;
 
-	// References to pickup prefabs
+	// References for spawning prefabs
 	private GameObject m_gunPickup;
 	private GameObject m_swordPickup;
 	private GameObject m_healthPickup;
 	private GameObject m_speedPickup;
 	private GameObject m_dmgPickup;
-	
+	private Collider2D m_background;
+	private float pickupTimer = 0;
 
 	public GameObject[] CreateObjectPool(string name, int count) {
 
@@ -132,8 +133,7 @@ public class GameManager : MonoBehaviour {
 	void Update() {
 
 		if (m_isPlaying) {
-
-
+			SpawnPickups();
 		}
 		else {
 			m_countdown -= Time.deltaTime;
@@ -174,13 +174,8 @@ public class GameManager : MonoBehaviour {
 	void AcquireReferences() {
 
 		m_gameObjectsPool = GameObject.FindGameObjectWithTag("Pool").GetComponent<Transform>();
-		m_player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-		m_gunPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Gun"), m_gameObjectsPool.position, Quaternion.identity, m_gameObjectsPool) as GameObject;
-		m_swordPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Sword"), m_gameObjectsPool.position, Quaternion.identity, m_gameObjectsPool) as GameObject;
-		m_speedPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Speed"), m_gameObjectsPool.position, Quaternion.identity, m_gameObjectsPool) as GameObject;
-		m_dmgPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Damage"), m_gameObjectsPool.position, Quaternion.identity, m_gameObjectsPool) as GameObject;
-		m_healthPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Health"), m_gameObjectsPool.position, Quaternion.identity, m_gameObjectsPool) as GameObject;
-		
+		m_player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();	
+		m_background = GameObject.Find("Background").GetComponent<Collider2D>();	
 	}
 
 	void Initialize() {
@@ -206,6 +201,35 @@ public class GameManager : MonoBehaviour {
 
 	void SpawnPickups() {
 
+		Vector2 randomPos = new Vector2(Random.Range(m_background.bounds.center.x - m_background.bounds.extents.x, m_background.bounds.size.x),
+						 				Random.Range(m_background.bounds.center.y - m_background.bounds.extents.y, m_background.bounds.size.y));
+
+		if (Time.time - pickupTimer > 15) {
+			switch(Random.Range(1,5)) {
+				case 1:
+					//Gun pickup spawn				
+					m_gunPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Gun"), randomPos, Quaternion.identity) as GameObject;
+					break;
+				case 2:
+					//Sword pickup spawn
+					m_swordPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Sword"), randomPos, Quaternion.identity) as GameObject;
+					break;
+				case 3:
+					//Health pickup spawn
+					m_healthPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Health"), randomPos, Quaternion.identity) as GameObject;
+					break;
+				case 4:
+					//Speed pickup spawn
+					m_speedPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Speed"), randomPos, Quaternion.identity) as GameObject;
+					break;
+				case 5:
+					//Damage pickup spawn
+					m_dmgPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Damage"), randomPos, Quaternion.identity) as GameObject;
+					break;
+			}
+			pickupTimer = Time.time;
+
+		}
 	}
 
 //===========================================================================
