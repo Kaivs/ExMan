@@ -3,6 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class MenuButton : MonoBehaviour {
 
+
+	public void GoToMenuFromSplash() {
+		Invoke("GoToMenu", 1);
+	}
 	public void GoToMenu() {
 		SceneManager.LoadScene("MainMenu");
 	}
