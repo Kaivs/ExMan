@@ -5,7 +5,7 @@ public class EnemyAI : MonoBehaviour {
 
 
 	// Spawn-related Variable and Accessors/Mutators
-	bool m_isActive;
+	public bool m_isActive;
 
 
 	public bool IsActive { get { return m_isActive; } }
@@ -29,6 +29,7 @@ public class EnemyAI : MonoBehaviour {
 	[SerializeField] float m_attackSpeed;
 	const float ATTACK_COOLDOWN_MAX = 5f;
 	float m_attackCooldown = 0;
+	public float m_attackRange = 0.5f;
 
 	// Unity Components
 	Rigidbody2D m_rb2d;
@@ -117,7 +118,7 @@ public class EnemyAI : MonoBehaviour {
 				m_speedType = MovementSpeed.Slow;
 			}
 
-			if (Vector2.Distance(m_targetPosition, m_transform.position) < 0.5f) {
+			if (Vector2.Distance(m_targetPosition, m_transform.position) < m_attackRange) {
 				m_speedType = MovementSpeed.None;
 				Attack();
 

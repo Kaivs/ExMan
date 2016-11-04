@@ -71,11 +71,6 @@ public class Bullet : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		CheckTriggerCollision(other);
-
-	}
-	void OnTriggerStay2D(Collider2D other)
-	{
-		CheckTriggerCollision(other);
 	}
 
 	void CheckTriggerCollision(Collider2D other) {
@@ -84,9 +79,11 @@ public class Bullet : MonoBehaviour {
 
 		if (other.tag == "Player" && m_type.Equals(Ownership.Enemy) && isSpawned) {
 			other.gameObject.GetComponent<Player>().LoseHealth(m_damage);
+			deSpawn = true;
 		}
 		else if (other.tag == "Enemy" && m_type.Equals(Ownership.Player) && isSpawned) {
 			other.gameObject.GetComponent<EnemyAI>().LoseHealth(m_damage);
+			deSpawn = true;
 		}
 
 		if (deSpawn) {

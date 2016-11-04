@@ -13,7 +13,25 @@ public class GameManager : MonoBehaviour {
 
 
 
-	enum EnemyType { Rat }	
+	enum EnemyType { Rat, Cockroach }	
+	EnemyType GetRandomEnemy() {
+		EnemyType type;
+		int enemy = Random.Range(0, 2);
+
+		switch (enemy) {
+			case 0:
+			type = EnemyType.Rat;
+			break;
+			case 1:
+			type = EnemyType.Cockroach;
+			break;
+			default:
+			type = EnemyType.Rat;
+			break;
+		}
+
+		return type;
+	}
 	int m_playerBulletPoolCount = 20;
 	public int PlayerBulletPoolCount { get { return m_playerBulletPoolCount; } }
 	GameObject[] m_enemyRatPool;
@@ -68,9 +86,7 @@ public class GameManager : MonoBehaviour {
 
 
 	private Player m_player;
-	public Player Player { get { return m_player; } }
-	
-	// *** Player Checker *** //
+	public Player Player { get { return m_player; } }	
 	public bool IsPlayerDead { get { return false /*To be changed soon!*/ ; } }
 
 
@@ -132,7 +148,7 @@ public class GameManager : MonoBehaviour {
 			m_countdown -= Time.deltaTime;
 			if (m_countdown <= 0) {
 				m_isPlaying = true;
-				Spawn(EnemyType.Rat);
+				Spawn(EnemyType.Cockroach);
 			}
 		}
 	}
@@ -159,17 +175,25 @@ public class GameManager : MonoBehaviour {
 	void Spawn(EnemyType type) {
 		
 		if (type.Equals(EnemyType.Rat)) {
-			for (int i = 0; i < m_enemyRatPool.Length; i++) {
-				if (!m_enemyRatPool[i].GetComponent<EnemyAI>().IsActive) {
-					m_enemyRatPool[i].GetComponent<EnemyAI>().Spawn(transform.position);
-					return;
-				}
+			SpawnFromPool(m_enemyRatPool);
+		}
+		else if (type.Equals(EnemyType.Cockroach)) {
+			SpawnFromPool(m_enemyCockroachPool);			
+		}
+	}
+
+	void SpawnFromPool(GameObject[] pool) {
+		for (int i = 0; i < pool.Length; i++) {
+			if (!pool[i].GetComponent<EnemyAI>().IsActive) {
+				pool[i].GetComponent<EnemyAI>().Spawn(transform.position);
+				return;
 			}
 		}
 	}
 
 	void CreateEnemyPool() {
 		m_enemyRatPool = CreateObjectPool("enemy_rat", EnemyRatPoolCount);
+		m_enemyCockroachPool = CreateObjectPool("enemy_cockroach", EnemyCockroackPoolCount);
 	}
 
 	void AcquireReferences() {

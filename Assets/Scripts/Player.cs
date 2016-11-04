@@ -116,6 +116,7 @@ public class Player : MonoBehaviour {
 			if (other.gameObject.tag == "Enemy") {
 				other.gameObject.GetComponent<EnemyAI>().LoseHealth(damage);
 				// Deal damage to enemy
+				attacking = false;
 			}
 		}
 	}
@@ -125,6 +126,7 @@ public class Player : MonoBehaviour {
 			if (other.gameObject.tag == "Enemy") {
 				other.gameObject.GetComponent<EnemyAI>().LoseHealth(damage);
 				// Deal damage to enemy
+				attacking = false;
 			}
 		}
 	}
