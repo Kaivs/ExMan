@@ -192,11 +192,7 @@ public class EnemyAI : MonoBehaviour {
 	}
 
 	public void Despawn() {
-<<<<<<< HEAD
 		GameObject.Find("GameManager").GetComponent<GameManager>().IncrementKills();
-=======
-
->>>>>>> Enemy
 		m_isActive = false;
 		transform.position = transform.parent.transform.position;	
 
