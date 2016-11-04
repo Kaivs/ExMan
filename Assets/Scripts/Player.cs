@@ -86,7 +86,7 @@ public class Player : MonoBehaviour {
 		RestrictMovement();
 	}
 
-	void OnTriggeStay2D(Collider2D other) {
+	void OnTriggerStay2D(Collider2D other) {
 		if (attacking) {
 			if (other.gameObject.tag == "Enemy") {
 				other.gameObject.GetComponent<EnemyAI>().Despawn();
