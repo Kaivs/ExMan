@@ -87,11 +87,17 @@ public class GameManager : MonoBehaviour {
 	public bool IsGameOver { get { return m_isGameOver; } }
 	int m_score;
 	public int CurrentScore { get { return m_score; } }
-	public void IncrementScore(int newValue) { m_score += newValue; }
-	public void DecrementScore(int newValue) { m_score -= newValue; }
 	int m_wave;
 	public int CurrentWave { get { return m_wave; } }
-	public void IncrementWave() { IncrementWave(1); }
+
+	int m_killCount;
+	public void IncrementWave() { 
+		if (m_killCount * m_wave > 10 * m_wave) {
+			IncrementWave(1); 
+		}
+	}
+
+	public void IncrementKills() { m_killCount += 1; }
 	public void IncrementWave(int newValue) { m_wave += newValue; }
 	public void DecrementWave() { DecrementWave(1); }
 	public void DecrementWave(int newValue) { m_wave -= newValue; }
@@ -134,6 +140,7 @@ public class GameManager : MonoBehaviour {
 
 		if (m_isPlaying) {
 			SpawnPickups();
+			IncrementWave();
 		}
 		else {
 			m_countdown -= Time.deltaTime;

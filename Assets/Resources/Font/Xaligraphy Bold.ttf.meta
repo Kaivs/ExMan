@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 08e08a78ee1f7484d829e1c35b67c426
+timeCreated: 1478297566
+licenseType: Pro
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Xaligraphy
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 78aace72baf246c4681c86037543fc85, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
