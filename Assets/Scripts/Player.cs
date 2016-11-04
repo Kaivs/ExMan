@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Player : MonoBehaviour {
@@ -11,16 +12,30 @@ public class Player : MonoBehaviour {
 	public bool takingDamage = false;
 	private Quaternion rotation;
 
+<<<<<<< HEAD
 	// Restrict camera movement
 	public GameObject camera;
 	private float vCamExtent;
 	private float hCamExtent;
 	private Vector3 restrictedPos;	
+=======
+	//Audio Files
+	private AudioSource m_audioManager;
+	public AudioClip GunShot;
+	public AudioClip GunCock;
+	public AudioClip SwordSwing;
+	public AudioClip SwordDraw;
+	public AudioClip HealthPickUp;
+	public AudioClip SpeedPickUp;
+
+	
+>>>>>>> GUI
 
 	// Speed pickup vars
-	private float speedBoostAmount = 5;
-	private float speedBoostTimer = 0;
-	private bool spedUp = false;
+	public float speedBoostAmount = 5;
+	public float speedBoostTimer = 0;
+	public bool spedUp = false;
+	public int pickupSpeed = 0;
 
 
 	//Dmg pickup vars
@@ -31,10 +46,10 @@ public class Player : MonoBehaviour {
 	// Weapon vars
 	public int damage = 1;
 	public bool hasGun = false;
-	private int bulletCounter = 0;
+	public int bulletCounter = 0;
 	public bool hasSword = false;
-	private int swordCounter = 0;
-	private bool attacking = false;
+	public int swordCounter = 0;
+	public bool attacking = false;
 	private float attackTimer = 0;
 	
 	public GameObject bullet;
@@ -68,6 +83,7 @@ public class Player : MonoBehaviour {
 		// Deactivate Speed boost after timer
 		if (spedUp && (Time.time - speedBoostTimer > 10)) {
 			maxSpeed -= speedBoostAmount;
+			pickupSpeed = 0;
 			spedUp = false;
 		}
 
@@ -157,10 +173,13 @@ public class Player : MonoBehaviour {
 		if (hasGun) {
 			if (bulletCounter > 0) {
 			Shoot();
+			m_audioManager.PlayOneShot(GunShot, .5f);
+			
 			}
 		} else if (hasSword) {
 			if (swordCounter > 0) {
 				Slash();
+				m_audioManager.PlayOneShot(SwordSwing, .5f);
 			}
 		} else {
 			FistAttack();
@@ -191,7 +210,7 @@ public class Player : MonoBehaviour {
 
 	void Shoot() {
 		bulletCounter--;
-		//GetComponent<Animator>().SetTrigger("shooting");		
+		//GetComponent<Animator>().SetTrigger("shooting");
 		for (int i = 0; i < BulletPool.Length; i++) {
 			if (!BulletPool[i].GetComponent<Bullet>().GetActive()) {
 				BulletPool[i].GetComponent<Bullet>().Spawn(m_gunPos.position, Input.mousePosition, Bullet.Ownership.Player, damage, true);
@@ -201,7 +220,7 @@ public class Player : MonoBehaviour {
 	}
 
 	void Slash() {
-		swordCounter--;
+		swordCounter--	;
 		attacking = true;
 		attackTimer = Time.time;
 		// GetComponent<Animator>().SetTrigger("slashing");
@@ -219,6 +238,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public void AddHealth(int amount) {
+		m_audioManager.PlayOneShot(HealthPickUp, .5f);
 		health += amount;
 	}
 
@@ -230,7 +250,8 @@ public class Player : MonoBehaviour {
 		return health < 0 ? 0 : health;
 	}
 
-	public void SpeedBoost() {
+	public void SpeedBoost() {	
+		m_audioManager.PlayOneShot(SpeedPickUp, .5f);
 		spedUp = true;
 		speedBoostTimer = Time.time;
 		maxSpeed += speedBoostAmount;
@@ -243,6 +264,7 @@ public class Player : MonoBehaviour {
 	}
  
 	public void PickupGun() {
+		m_audioManager.PlayOneShot(GunCock, .5f);		
 		if (hasGun) {
 			bulletCounter += 20;
 		} else {
@@ -257,6 +279,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public void PickupSword() {
+		m_audioManager.PlayOneShot(SwordDraw, .5f);
 		if (hasSword) {
 			swordCounter += 20;
 		} else {
