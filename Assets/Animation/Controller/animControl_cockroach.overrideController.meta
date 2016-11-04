@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Animation/Controller/animControl_cockroach.overrideController.meta
 guid: fcf668a1f5997ae4cb90bc380473705d
 timeCreated: 1478302239
+=======
+guid: b7c3e0e761777dd43adfbc58922875e6
+timeCreated: 1478303030
+>>>>>>> 3347dbc87032dc481e6a70fad3a9c1ea4ac972ba:Assets/Scenes/MainMenu.unity.meta
 licenseType: Pro
 NativeFormatImporter:
   userData: 

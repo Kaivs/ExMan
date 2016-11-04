@@ -12,7 +12,7 @@ public class Player : MonoBehaviour {
 	private Quaternion rotation;
 
 	// Restrict camera movement
-	public GameObject camera;
+	public GameObject m_camera;
 	private float vCamExtent;
 	private float hCamExtent;
 	private Vector3 restrictedPos;	
@@ -31,9 +31,9 @@ public class Player : MonoBehaviour {
 	// Weapon vars
 	public int damage = 1;
 	public bool hasGun = false;
-	private int bulletCounter = 0;
+	public int bulletCounter = 0;
 	public bool hasSword = false;
-	private int swordCounter = 0;
+	public int swordCounter = 0;
 	private bool attacking = false;
 	private float attackTimer = 0;
 	
@@ -48,8 +48,8 @@ public class Player : MonoBehaviour {
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
 
-		vCamExtent = camera.GetComponent<Collider2D>().bounds.extents.y;
-		hCamExtent = camera.GetComponent<Collider2D>().bounds.extents.x;
+		vCamExtent = m_camera.GetComponent<Collider2D>().bounds.extents.y;
+		hCamExtent = m_camera.GetComponent<Collider2D>().bounds.extents.x;
 		restrictedPos = transform.position;
 		BulletPool = GameManager.Instance.CreateObjectPool("bullet_player", GameManager.Instance.PlayerBulletPoolCount);
 
@@ -134,15 +134,15 @@ public class Player : MonoBehaviour {
 	//Restrict player movement to on Camera
 	void RestrictMovement() {
 		restrictedPos = transform.position;
-		if (transform.position.x > (camera.transform.position.x + hCamExtent)) {
-			restrictedPos.x = camera.transform.position.x + hCamExtent;
-		} else if (transform.position.x < (camera.transform.position.x - hCamExtent)){
-			restrictedPos.x = camera.transform.position.x - hCamExtent;
+		if (transform.position.x > (m_camera.transform.position.x + hCamExtent)) {
+			restrictedPos.x = m_camera.transform.position.x + hCamExtent;
+		} else if (transform.position.x < (m_camera.transform.position.x - hCamExtent)){
+			restrictedPos.x = m_camera.transform.position.x - hCamExtent;
 		}
-		if (transform.position.y > (camera.transform.position.y + vCamExtent)) {
-			restrictedPos.y = camera.transform.position.y + vCamExtent;
-		} else if (transform.position.y < (camera.transform.position.y - vCamExtent)){
-			restrictedPos.y = camera.transform.position.y - vCamExtent;
+		if (transform.position.y > (m_camera.transform.position.y + vCamExtent)) {
+			restrictedPos.y = m_camera.transform.position.y + vCamExtent;
+		} else if (transform.position.y < (m_camera.transform.position.y - vCamExtent)){
+			restrictedPos.y = m_camera.transform.position.y - vCamExtent;
 		}
 
 		transform.position = restrictedPos;
