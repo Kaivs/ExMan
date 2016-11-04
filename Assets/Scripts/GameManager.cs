@@ -158,6 +158,14 @@ public class GameManager : MonoBehaviour {
 
 
 
+// (***************) LEVEL RELATED (***************)
+	
+	void ManageWave() {
+
+	}
+
+
+
 //===========================================================================
 //		GameManager Functions - BEGIN
 //===========================================================================
@@ -188,7 +196,7 @@ public class GameManager : MonoBehaviour {
 	void Initialize() {
 
 		m_score = 0;
-		m_wave = 0;
+		m_wave = 1;
 		m_isGameOver = false;
 		m_isPlaying = false;
 		// More variables soon
@@ -199,7 +207,9 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void NextWave() {
-		// TODO: Handles wave transitioning
+		
+		m_wave += 1;
+
 	}
 
 	void CheckGameOverCondition() {

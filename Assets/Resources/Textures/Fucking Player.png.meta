@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 9a6b5e2859cd12840985b376c17b25fd
-timeCreated: 1478127928
+guid: d4e5c5c8267a18b4f86ad7a9bb1fdbd3
+timeCreated: 1478292111
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -19,6 +19,12 @@ TextureImporter:
     21300024: Fucking Player_12
     21300026: Fucking Player_13
     21300028: Fucking Player_14
+    21300030: Fucking Player_15
+    21300032: Fucking Player_16
+    21300034: Fucking Player_17
+    21300036: Fucking Player_18
+    21300038: Fucking Player_19
+    21300040: Fucking Player_20
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -149,8 +155,8 @@ TextureImporter:
       name: Fucking Player_6
       rect:
         serializedVersion: 2
-        x: 0
-        y: 64
+        x: 384
+        y: 128
         width: 64
         height: 64
       alignment: 0
@@ -162,8 +168,8 @@ TextureImporter:
       name: Fucking Player_7
       rect:
         serializedVersion: 2
-        x: 64
-        y: 64
+        x: 448
+        y: 128
         width: 64
         height: 64
       alignment: 0
@@ -175,8 +181,8 @@ TextureImporter:
       name: Fucking Player_8
       rect:
         serializedVersion: 2
-        x: 128
-        y: 64
+        x: 512
+        y: 128
         width: 64
         height: 64
       alignment: 0
@@ -188,8 +194,8 @@ TextureImporter:
       name: Fucking Player_9
       rect:
         serializedVersion: 2
-        x: 192
-        y: 64
+        x: 576
+        y: 128
         width: 64
         height: 64
       alignment: 0
@@ -201,8 +207,8 @@ TextureImporter:
       name: Fucking Player_10
       rect:
         serializedVersion: 2
-        x: 256
-        y: 64
+        x: 640
+        y: 128
         width: 64
         height: 64
       alignment: 0
@@ -214,8 +220,8 @@ TextureImporter:
       name: Fucking Player_11
       rect:
         serializedVersion: 2
-        x: 320
-        y: 64
+        x: 704
+        y: 128
         width: 64
         height: 64
       alignment: 0
@@ -228,7 +234,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 64
         width: 64
         height: 64
       alignment: 0
@@ -241,7 +247,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 0
+        y: 64
         width: 64
         height: 64
       alignment: 0
@@ -251,6 +257,84 @@ TextureImporter:
       tessellationDetail: 0
     - serializedVersion: 2
       name: Fucking Player_14
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Fucking Player_15
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Fucking Player_16
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Fucking Player_17
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Fucking Player_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Fucking Player_19
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Fucking Player_20
       rect:
         serializedVersion: 2
         x: 128
