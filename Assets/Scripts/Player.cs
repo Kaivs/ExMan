@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 
 public class Player : MonoBehaviour {
@@ -12,30 +11,16 @@ public class Player : MonoBehaviour {
 	public bool takingDamage = false;
 	private Quaternion rotation;
 
-<<<<<<< HEAD
 	// Restrict camera movement
-	public GameObject camera;
+	public GameObject m_camera;
 	private float vCamExtent;
 	private float hCamExtent;
 	private Vector3 restrictedPos;	
-=======
-	//Audio Files
-	private AudioSource m_audioManager;
-	public AudioClip GunShot;
-	public AudioClip GunCock;
-	public AudioClip SwordSwing;
-	public AudioClip SwordDraw;
-	public AudioClip HealthPickUp;
-	public AudioClip SpeedPickUp;
-
-	
->>>>>>> GUI
 
 	// Speed pickup vars
-	public float speedBoostAmount = 5;
-	public float speedBoostTimer = 0;
-	public bool spedUp = false;
-	public int pickupSpeed = 0;
+	private float speedBoostAmount = 5;
+	private float speedBoostTimer = 0;
+	private bool spedUp = false;
 
 
 	//Dmg pickup vars
@@ -49,7 +34,7 @@ public class Player : MonoBehaviour {
 	public int bulletCounter = 0;
 	public bool hasSword = false;
 	public int swordCounter = 0;
-	public bool attacking = false;
+	private bool attacking = false;
 	private float attackTimer = 0;
 	
 	public GameObject bullet;
@@ -63,8 +48,8 @@ public class Player : MonoBehaviour {
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
 
-		vCamExtent = camera.GetComponent<Collider2D>().bounds.extents.y;
-		hCamExtent = camera.GetComponent<Collider2D>().bounds.extents.x;
+		vCamExtent = m_camera.GetComponent<Collider2D>().bounds.extents.y;
+		hCamExtent = m_camera.GetComponent<Collider2D>().bounds.extents.x;
 		restrictedPos = transform.position;
 		BulletPool = GameManager.Instance.CreateObjectPool("bullet_player", GameManager.Instance.PlayerBulletPoolCount);
 
@@ -83,7 +68,6 @@ public class Player : MonoBehaviour {
 		// Deactivate Speed boost after timer
 		if (spedUp && (Time.time - speedBoostTimer > 10)) {
 			maxSpeed -= speedBoostAmount;
-			pickupSpeed = 0;
 			spedUp = false;
 		}
 
@@ -148,15 +132,15 @@ public class Player : MonoBehaviour {
 	//Restrict player movement to on Camera
 	void RestrictMovement() {
 		restrictedPos = transform.position;
-		if (transform.position.x > (camera.transform.position.x + hCamExtent)) {
-			restrictedPos.x = camera.transform.position.x + hCamExtent;
-		} else if (transform.position.x < (camera.transform.position.x - hCamExtent)){
-			restrictedPos.x = camera.transform.position.x - hCamExtent;
+		if (transform.position.x > (m_camera.transform.position.x + hCamExtent)) {
+			restrictedPos.x = m_camera.transform.position.x + hCamExtent;
+		} else if (transform.position.x < (m_camera.transform.position.x - hCamExtent)){
+			restrictedPos.x = m_camera.transform.position.x - hCamExtent;
 		}
-		if (transform.position.y > (camera.transform.position.y + vCamExtent)) {
-			restrictedPos.y = camera.transform.position.y + vCamExtent;
-		} else if (transform.position.y < (camera.transform.position.y - vCamExtent)){
-			restrictedPos.y = camera.transform.position.y - vCamExtent;
+		if (transform.position.y > (m_camera.transform.position.y + vCamExtent)) {
+			restrictedPos.y = m_camera.transform.position.y + vCamExtent;
+		} else if (transform.position.y < (m_camera.transform.position.y - vCamExtent)){
+			restrictedPos.y = m_camera.transform.position.y - vCamExtent;
 		}
 
 		transform.position = restrictedPos;
@@ -173,13 +157,10 @@ public class Player : MonoBehaviour {
 		if (hasGun) {
 			if (bulletCounter > 0) {
 			Shoot();
-			m_audioManager.PlayOneShot(GunShot, .5f);
-			
 			}
 		} else if (hasSword) {
 			if (swordCounter > 0) {
 				Slash();
-				m_audioManager.PlayOneShot(SwordSwing, .5f);
 			}
 		} else {
 			FistAttack();
@@ -210,7 +191,7 @@ public class Player : MonoBehaviour {
 
 	void Shoot() {
 		bulletCounter--;
-		//GetComponent<Animator>().SetTrigger("shooting");
+		//GetComponent<Animator>().SetTrigger("shooting");		
 		for (int i = 0; i < BulletPool.Length; i++) {
 			if (!BulletPool[i].GetComponent<Bullet>().GetActive()) {
 				BulletPool[i].GetComponent<Bullet>().Spawn(m_gunPos.position, Input.mousePosition, Bullet.Ownership.Player, damage, true);
@@ -220,7 +201,7 @@ public class Player : MonoBehaviour {
 	}
 
 	void Slash() {
-		swordCounter--	;
+		swordCounter--;
 		attacking = true;
 		attackTimer = Time.time;
 		// GetComponent<Animator>().SetTrigger("slashing");
@@ -238,7 +219,6 @@ public class Player : MonoBehaviour {
 	}
 
 	public void AddHealth(int amount) {
-		m_audioManager.PlayOneShot(HealthPickUp, .5f);
 		health += amount;
 	}
 
@@ -250,8 +230,7 @@ public class Player : MonoBehaviour {
 		return health < 0 ? 0 : health;
 	}
 
-	public void SpeedBoost() {	
-		m_audioManager.PlayOneShot(SpeedPickUp, .5f);
+	public void SpeedBoost() {
 		spedUp = true;
 		speedBoostTimer = Time.time;
 		maxSpeed += speedBoostAmount;
@@ -264,7 +243,6 @@ public class Player : MonoBehaviour {
 	}
  
 	public void PickupGun() {
-		m_audioManager.PlayOneShot(GunCock, .5f);		
 		if (hasGun) {
 			bulletCounter += 20;
 		} else {
@@ -279,7 +257,6 @@ public class Player : MonoBehaviour {
 	}
 
 	public void PickupSword() {
-		m_audioManager.PlayOneShot(SwordDraw, .5f);
 		if (hasSword) {
 			swordCounter += 20;
 		} else {

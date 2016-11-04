@@ -39,7 +39,7 @@ public class Bullet : MonoBehaviour {
 			Vector3 mousePos = Camera.main.ScreenToWorldPoint(target);
 			moveDirection.x = (mousePos.x - transform.position.x);
 			moveDirection.y = (mousePos.y - transform.position.y);
-			transform.eulerAngles = new Vector3(0,0,Mathf.Atan2((mousePos.y - transform.position.y), (mousePos.x - transform.position.x))*Mathf.Rad2Deg - 90);		
+			transform.eulerAngles = new Vector3(0,0,Mathf.Atan2((mousePos.y - transform.position.y), (mousePos.x - transform.position.x))*Mathf.Rad2Deg - 90); 
 		}
 		else {
 			moveDirection.x = (target.x - transform.position.x);

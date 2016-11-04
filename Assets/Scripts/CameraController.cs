@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour {
 	private Collider2D background;
 	private Vector3 playerPos;
 	private float deadZoneX = 5;
-	private float deadZoneY = 3;
+	private float deadZoneY = 4;
 	private Vector3 velocity = Vector3.zero;
 	private float smoothTime = 1f;
 

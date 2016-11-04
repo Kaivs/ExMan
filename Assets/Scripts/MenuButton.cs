@@ -21,8 +21,5 @@ public class MenuButton : MonoBehaviour {
 		#endif
 		Application.Quit();
 	}
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> GUI
+
