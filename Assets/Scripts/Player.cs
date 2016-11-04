@@ -8,7 +8,12 @@ public class Player : MonoBehaviour {
 	public float maxSpeed = 10;
 	public bool takingDamage = false;
 	private Quaternion rotation;
-	
+
+	// Restrict camera movement
+	public GameObject camera;
+	private float vCamExtent;
+	private float hCamExtent;
+	private Vector3 restrictedPos;	
 
 	// Speed pickup vars
 	private float speedBoostAmount = 5;
@@ -40,6 +45,9 @@ public class Player : MonoBehaviour {
 
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
+		vCamExtent = camera.GetComponent<Collider2D>().bounds.extents.y;
+		hCamExtent = camera.GetComponent<Collider2D>().bounds.extents.x;
+		restrictedPos = transform.position;
 		BulletPool = new GameObject[20];
 		CreateBulletPool();
 	}
@@ -79,7 +87,10 @@ public class Player : MonoBehaviour {
 
 		//Rotation to mousePos
 		rb2d.transform.eulerAngles = new Vector3(0,0,Mathf.Atan2((mousePos.y - transform.position.y), (mousePos.x - transform.position.x))*Mathf.Rad2Deg - 90);
+		
+		// Movement
 		rb2d.velocity = new Vector2 (hInput * maxSpeed, vInput * maxSpeed);
+		RestrictMovement();
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
@@ -88,6 +99,24 @@ public class Player : MonoBehaviour {
 				// Deal damage to enemy
 			}
 		}
+	}
+
+	//Restrict player movement to on Camera
+	void RestrictMovement() {
+		restrictedPos = transform.position;
+		if (transform.position.x > (camera.transform.position.x + hCamExtent)) {
+			restrictedPos.x = camera.transform.position.x + hCamExtent;
+		} else if (transform.position.x < (camera.transform.position.x - hCamExtent)){
+			restrictedPos.x = camera.transform.position.x - hCamExtent;
+		}
+		if (transform.position.y > (camera.transform.position.y + vCamExtent)) {
+			restrictedPos.y = camera.transform.position.y + vCamExtent;
+		} else if (transform.position.y < (camera.transform.position.y - vCamExtent)){
+			restrictedPos.y = camera.transform.position.y - vCamExtent;
+		}
+
+		transform.position = restrictedPos;
+		
 	}
 
 
