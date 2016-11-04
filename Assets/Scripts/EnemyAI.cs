@@ -153,7 +153,7 @@ public class EnemyAI : MonoBehaviour {
 		transform.rotation = Quaternion.LookRotation(Vector3.forward, m_targetPosition - m_transform.position);
 	}
 
-	void Despawn() {
+	public void Despawn() {
 		m_isActive = false;
 		transform.position = transform.parent.transform.position;
 	}

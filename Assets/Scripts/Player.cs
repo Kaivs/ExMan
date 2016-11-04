@@ -52,13 +52,6 @@ public class Player : MonoBehaviour {
 		BulletPool = GameManager.Instance.CreateObjectPool("bullet_player", GameManager.Instance.PlayerBulletPoolCount);
 	}
 
-	void CreateBulletPool() {
-		for (int i = 0; i < BulletPool.Length; i++) {
-			BulletPool[i] = Instantiate(bullet, new Vector3(-200, -200, 0), Quaternion.identity) as GameObject;
-			BulletPool[i].GetComponent<Bullet>().SetActive(false);
-		}
-	}
-
 	void FixedUpdate() {
 		
 		// Movement and Attacking
@@ -96,6 +89,7 @@ public class Player : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other) {
 		if (attacking) {
 			if (other.gameObject.tag == "Enemy") {
+				other.gameObject.GetComponent<EnemyAI>().Despawn();
 				// Deal damage to enemy
 			}
 		}
