@@ -194,7 +194,7 @@ public class GameManager : MonoBehaviour {
 	void NextWave() {
 		
 		m_wave += 1;
-		
+
 	}
 
 	void CheckGameOverCondition() {

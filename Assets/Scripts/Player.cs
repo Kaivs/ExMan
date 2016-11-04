@@ -55,14 +55,26 @@ public class Player : MonoBehaviour {
 		m_anim = GetComponent<Animator>();
 	}
 
+	void Update() {
+		m_anim.SetBool("isAttacking", false);
+		
+		bool attack = Input.GetMouseButtonDown(0);
+		if(attack) { Attack(); }
+		
+		if (rb2d.velocity != Vector2.zero) {
+			m_anim.SetBool("isMoving", true);
+		}
+		else {
+			m_anim.SetBool("isMoving", false);			
+		}
+	}
+
 	void FixedUpdate() {
 		
 		// Movement and Attacking
 		float hInput = Input.GetAxis ("Horizontal");
 		float vInput = Input.GetAxis ("Vertical");
 		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		bool attack = Input.GetMouseButtonDown(0);
-		if(attack) { Attack(); }
 
 		// Deactivate Speed boost after timer
 		if (spedUp && (Time.time - speedBoostTimer > 10)) {
@@ -86,12 +98,7 @@ public class Player : MonoBehaviour {
 		
 		// Movement
 		rb2d.velocity = new Vector2 (hInput * maxSpeed, vInput * maxSpeed);
-		if (rb2d.velocity != Vector2.zero) {
-			m_anim.SetBool("isMoving", true);
-		}
-		else {
-			m_anim.SetBool("isMoving", false);			
-		}
+
 		RestrictMovement();
 	}
 
@@ -136,6 +143,8 @@ public class Player : MonoBehaviour {
 	// ==================================
 	
 	void Attack() {
+		m_anim.SetBool("isAttacking", true);
+
 		if (hasGun) {
 			if (bulletCounter > 0) {
 			Shoot();
