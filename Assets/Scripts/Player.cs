@@ -6,10 +6,19 @@ public class Player : MonoBehaviour {
 
 	// Base member vars
 	private Rigidbody2D rb2d;
-	private Slider m_slider;
 	public float maxSpeed = 10;
 	public bool takingDamage = false;
 	private Quaternion rotation;
+
+	//Audio Files
+	private AudioSource m_audioManager;
+	public AudioClip GunShot;
+	public AudioClip GunCock;
+	public AudioClip SwordSwing;
+	public AudioClip SwordDraw;
+	public AudioClip HealthPickUp;
+	public AudioClip SpeedPickUp;
+
 	
 
 	// Speed pickup vars
@@ -43,9 +52,9 @@ public class Player : MonoBehaviour {
 
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
-		m_slider = GetComponent<Slider>();
 		BulletPool = new GameObject[20];
 		CreateBulletPool();
+		m_audioManager = GetComponent<AudioSource>();
 	}
 
 	void CreateBulletPool() {
@@ -103,10 +112,13 @@ public class Player : MonoBehaviour {
 		if (hasGun) {
 			if (bulletCounter > 0) {
 			Shoot();
+			m_audioManager.PlayOneShot(GunShot, .5f);
+			
 			}
 		} else if (hasSword) {
 			if (swordCounter > 0) {
 				Slash();
+				m_audioManager.PlayOneShot(SwordSwing, .5f);
 			}
 		} else {
 			//Attack animation for fists
@@ -131,7 +143,7 @@ public class Player : MonoBehaviour {
 
 	void Shoot() {
 		bulletCounter--;
-		//GetComponent<Animator>().SetTrigger("shooting");		
+		//GetComponent<Animator>().SetTrigger("shooting");
 		for (int i = 0; i < BulletPool.Length; i++) {
 			if (!BulletPool[i].GetComponent<Bullet>().GetActive()) {
 				BulletPool[i].GetComponent<Bullet>().Spawn();
@@ -141,7 +153,7 @@ public class Player : MonoBehaviour {
 	}
 
 	void Slash() {
-		swordCounter--;
+		swordCounter--	;
 		attacking = true;
 		attackTimer = Time.time;
 		// GetComponent<Animator>().SetTrigger("slashing");
@@ -159,6 +171,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public void AddHealth(int amount) {
+		m_audioManager.PlayOneShot(HealthPickUp, .5f);
 		health += amount;
 	}
 
@@ -171,6 +184,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public void SpeedBoost() {	
+		m_audioManager.PlayOneShot(SpeedPickUp, .5f);
 		spedUp = true;
 		speedBoostTimer = Time.time;
 		maxSpeed += speedBoostAmount;
@@ -183,6 +197,7 @@ public class Player : MonoBehaviour {
 	}
  
 	public void PickupGun() {
+		m_audioManager.PlayOneShot(GunCock, .5f);		
 		if (hasGun) {
 			bulletCounter += 20;
 		} else {
@@ -197,6 +212,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public void PickupSword() {
+		m_audioManager.PlayOneShot(SwordDraw, .5f);
 		if (hasSword) {
 			swordCounter += 20;
 		} else {

@@ -4,6 +4,8 @@ using System.Collections;
 
 public class AudioManager : MonoBehaviour {
 
+	public AudioClip otherClip;
+
 	//Drag a reference to the audio source which will play the sound effects.
 	public AudioSource m_sfxSource;
 
