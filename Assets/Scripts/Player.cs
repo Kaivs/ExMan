@@ -45,11 +45,11 @@ public class Player : MonoBehaviour {
 
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
+
 		vCamExtent = camera.GetComponent<Collider2D>().bounds.extents.y;
 		hCamExtent = camera.GetComponent<Collider2D>().bounds.extents.x;
 		restrictedPos = transform.position;
-		BulletPool = new GameObject[20];
-		CreateBulletPool();
+		BulletPool = GameManager.Instance.CreateObjectPool("bullet_player", GameManager.Instance.PlayerBulletPoolCount);
 	}
 
 	void CreateBulletPool() {
@@ -151,6 +151,7 @@ public class Player : MonoBehaviour {
 		}
 
 	}
+
 
 
 	void Shoot() {

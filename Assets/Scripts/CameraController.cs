@@ -12,7 +12,6 @@ public class CameraController : MonoBehaviour {
 	private Vector3 velocity = Vector3.zero;
 	private float smoothTime = 1f;
 
-
 	// Camera bounds restriction
 	private float vCamExtent;
 	private float hCamExtent;

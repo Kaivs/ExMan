@@ -27,21 +27,37 @@ public class Bullet : MonoBehaviour {
 	}
 
 	public void Spawn() {
+		Spawn(player.transform.position, Input.mousePosition, true);
+	}
+
+	public void Spawn(Vector3 position, Vector3 target, bool isMouseLocation = false) {
 		isSpawned = true;
-		transform.position = player.transform.position;
-		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		moveDirection.x = (mousePos.x - transform.position.x);
-		moveDirection.y = (mousePos.y - transform.position.y);
+		transform.position = position;
+
+		if (isMouseLocation) {
+			Vector3 mousePos = Camera.main.ScreenToWorldPoint(target);
+			moveDirection.x = (mousePos.x - transform.position.x);
+			moveDirection.y = (mousePos.y - transform.position.y);
+		}
+		else {
+			moveDirection.x = (target.x - transform.position.x);
+			moveDirection.y = (target.y - transform.position.y);
+		}
+
 		moveDirection = moveDirection.normalized;
 	}
 
 	void Despawn() {
 		isSpawned = false;
-		transform.position = new Vector3( -200, -200, 0);
+		transform.position = transform.parent.transform.position;
 	}
 
-	public void SetActive(bool active) {
-		isSpawned = active;
+	public void SetActive() {
+		isSpawned = true;
+	}
+
+	public void SetInactive() {
+		isSpawned = false;
 	}
 
 	public bool GetActive() {
