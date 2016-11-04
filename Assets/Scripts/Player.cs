@@ -4,6 +4,7 @@ using System.Collections;
 public class Player : MonoBehaviour {
 
 	// Base member vars
+	private Transform m_gunPos;
 	private Animator m_anim;
 	private Rigidbody2D rb2d;
 	public float maxSpeed = 10;
@@ -53,27 +54,15 @@ public class Player : MonoBehaviour {
 		BulletPool = GameManager.Instance.CreateObjectPool("bullet_player", GameManager.Instance.PlayerBulletPoolCount);
 
 		m_anim = GetComponent<Animator>();
+		m_gunPos = transform.GetChild(0).GetComponent<Transform>();
 	}
 
-	void Update() {
-		m_anim.SetBool("isAttacking", false);
-		
-		bool attack = Input.GetMouseButtonDown(0);
-		if(attack) { Attack(); }
-		
-		if (rb2d.velocity != Vector2.zero) {
-			m_anim.SetBool("isMoving", true);
-		}
-		else {
-			m_anim.SetBool("isMoving", false);			
-		}
-	}
-
-	void FixedUpdate() {
+	void Update() {		
 		
 		// Movement and Attacking
 		float hInput = Input.GetAxis ("Horizontal");
 		float vInput = Input.GetAxis ("Vertical");
+
 		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
 		// Deactivate Speed boost after timer
@@ -93,13 +82,33 @@ public class Player : MonoBehaviour {
 			attacking = false;
 		}
 
+
+		m_anim.SetBool("isAttacking", false);
+		
+		bool attack = Input.GetMouseButtonDown(0);
+		if(attack) { Attack(); }
+		
+		if (rb2d.velocity != Vector2.zero) {
+			m_anim.SetBool("isMoving", true);
+		}
+		else {
+			m_anim.SetBool("isMoving", false);			
+		}
+		
+
 		//Rotation to mousePos
 		rb2d.transform.eulerAngles = new Vector3(0,0,Mathf.Atan2((mousePos.y - transform.position.y), (mousePos.x - transform.position.x))*Mathf.Rad2Deg - 90);
-		
+
 		// Movement
 		rb2d.velocity = new Vector2 (hInput * maxSpeed, vInput * maxSpeed);
+	}
 
-		RestrictMovement();
+	void LateUpdate()
+	{		
+	}
+
+	void FixedUpdate() {
+		RestrictMovement();		
 	}
 
 	void OnTriggerStay2D(Collider2D other) {
@@ -154,7 +163,7 @@ public class Player : MonoBehaviour {
 				Slash();
 			}
 		} else {
-			//Attack animation for fists
+			FistAttack();
 		}
 
 		//Drop weapon when counter runs out
@@ -173,6 +182,11 @@ public class Player : MonoBehaviour {
 
 	}
 
+	void FistAttack() {
+		attacking = true;
+		attackTimer = Time.time;
+	}
+
 
 
 	void Shoot() {
@@ -180,7 +194,7 @@ public class Player : MonoBehaviour {
 		//GetComponent<Animator>().SetTrigger("shooting");		
 		for (int i = 0; i < BulletPool.Length; i++) {
 			if (!BulletPool[i].GetComponent<Bullet>().GetActive()) {
-				BulletPool[i].GetComponent<Bullet>().Spawn(transform.position, Input.mousePosition, Bullet.Ownership.Player, damage, true);
+				BulletPool[i].GetComponent<Bullet>().Spawn(m_gunPos.position, Input.mousePosition, Bullet.Ownership.Player, damage, true);
 				return;
 			}
 		}
