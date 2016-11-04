@@ -22,9 +22,16 @@ public class GameManager : MonoBehaviour {
 	GameObject[] m_enemyCockroachPool;
 	int m_enemyCockroachPoolCount = 10;
 	public int EnemyCockroackPoolCount { get { return m_enemyCockroachPoolCount; } }
-
 	public GameObject[] prefabs;
 	public Transform m_gameObjectsPool;
+
+	// References to pickup prefabs
+	private GameObject m_gunPickup;
+	private GameObject m_swordPickup;
+	private GameObject m_healthPickup;
+	private GameObject m_speedPickup;
+	private GameObject m_dmgPickup;
+	
 
 	public GameObject[] CreateObjectPool(string name, int count) {
 
@@ -168,6 +175,12 @@ public class GameManager : MonoBehaviour {
 
 		m_gameObjectsPool = GameObject.FindGameObjectWithTag("Pool").GetComponent<Transform>();
 		m_player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		m_gunPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Gun"), m_gameObjectsPool.position, Quaternion.identity, m_gameObjectsPool) as GameObject;
+		m_swordPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Sword"), m_gameObjectsPool.position, Quaternion.identity, m_gameObjectsPool) as GameObject;
+		m_speedPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Speed"), m_gameObjectsPool.position, Quaternion.identity, m_gameObjectsPool) as GameObject;
+		m_dmgPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Damage"), m_gameObjectsPool.position, Quaternion.identity, m_gameObjectsPool) as GameObject;
+		m_healthPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Health"), m_gameObjectsPool.position, Quaternion.identity, m_gameObjectsPool) as GameObject;
+		
 	}
 
 	void Initialize() {
@@ -189,6 +202,10 @@ public class GameManager : MonoBehaviour {
 
 	void CheckGameOverCondition() {
 		// TODO: Handles the gameOver condition
+	}
+
+	void SpawnPickups() {
+
 	}
 
 //===========================================================================
