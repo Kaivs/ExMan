@@ -13,7 +13,7 @@ public class EnemyAI : MonoBehaviour {
 	public void SetInactive() { m_isActive = false; }
 
 
-	enum State { Seek, Attack, Dead }
+	enum State { Seek, Dead }
 	enum MovementSpeed { None, Default, Slow }
 
 	[SerializeField] Transform m_targetTransform;
@@ -26,11 +26,17 @@ public class EnemyAI : MonoBehaviour {
 	[SerializeField] int m_damage;
 	[SerializeField] int m_health;
 
+	[SerializeField] float m_attackSpeed;
+	const float ATTACK_COOLDOWN_MAX = 5f;
+	float m_attackCooldown = 0;
+
 	// Unity Components
 	Rigidbody2D m_rb2d;
 	Animator m_anim;
 
 	// Non-Unity Components
+	const float DEATH_TIME_MAX = 2f;
+	float m_deathCountdown;
 	bool m_isDead;
 	State m_behaviour;
 	MovementSpeed m_speedType;
@@ -52,6 +58,7 @@ public class EnemyAI : MonoBehaviour {
 
 			UpdateTargetInformation();
 			InvokeBehaviour();
+			UpdateAnimation();
 		}
 		else {
 			if (m_targetTransform == null) {
@@ -87,7 +94,19 @@ public class EnemyAI : MonoBehaviour {
 	}
 
 	void Attack() {
-		m_anim.SetTrigger("attack");
+		if (m_attackCooldown <= 0) {
+			m_attackCooldown = ATTACK_COOLDOWN_MAX;
+			m_anim.SetTrigger("attack");
+			GameManager.Instance.Player.LoseHealth(m_damage);
+		}
+		else {
+			m_attackCooldown -= m_attackSpeed * Time.deltaTime;
+		}
+	}
+
+	void UpdateAnimation() {
+
+		m_anim.SetBool("isDead", m_isDead);
 	}
 
 	void InvokeBehaviour() {
@@ -101,18 +120,37 @@ public class EnemyAI : MonoBehaviour {
 			if (Vector2.Distance(m_targetPosition, m_transform.position) < 0.5f) {
 				m_speedType = MovementSpeed.None;
 				Attack();
+
 			}
 			else {
 				m_speedType = MovementSpeed.Default;
 			}
 
 			if (m_speedType.Equals(MovementSpeed.None)) {
-				m_rb2d.velocity = Vector2.zero;
+				Stop();
 			}
 			else {
 				MoveForward();
 			}	
 		}
+		else {
+			
+			Stop();
+			Decay();
+		}
+	}
+
+	void Decay() {
+		m_deathCountdown -= Time.deltaTime;
+		
+		if (m_deathCountdown <= 0) {
+			Despawn();
+		}
+	}
+
+	void Stop() {
+
+		m_rb2d.velocity = Vector2.zero;
 	}
 
 	void MoveForward() { MoveForward(m_speed); }
@@ -139,22 +177,40 @@ public class EnemyAI : MonoBehaviour {
 
 		if (m_transform.rotation != rotationNeeded) {
 			isRotating = true;
-			m_transform.rotation = Quaternion.RotateTowards(m_transform.rotation, rotationNeeded, m_turnSpeed * Time.deltaTime);
+			m_transform.rotation = Quaternion.RotateTowards(m_transform.rotation, rotationNeeded, m_turnSpeed);
 		}
-
 
 		return isRotating;
 	}
 
 	// SPAWN Related
 	public void Spawn(Vector3 position) {
+
 		m_isActive = true;
 		transform.position = position;
 		transform.rotation = Quaternion.LookRotation(Vector3.forward, m_targetPosition - m_transform.position);
 	}
 
 	public void Despawn() {
+
 		m_isActive = false;
-		transform.position = transform.parent.transform.position;
+		transform.position = transform.parent.transform.position;	
+
+		// RE-INITIALIZE AFTER	
+		Initialize();
+	}
+
+	void CheckIfDead() {
+
+		if (m_health <= 0) {
+			m_isDead = true;
+			m_behaviour = State.Dead;
+			m_deathCountdown = DEATH_TIME_MAX;
+		}
+	}
+
+	public void LoseHealth(int newValue) {
+		m_health -= newValue;
+		CheckIfDead();
 	}
 }

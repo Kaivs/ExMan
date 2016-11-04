@@ -40,7 +40,7 @@ public class GUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		HeartUI.sprite = HeartSprites[m_player.health];
+		HeartUI.sprite = HeartSprites[m_player.GetHealth()];
 		WeaponUI.sprite = Weapon[m_player.Weapon];
 	}
 }

@@ -3,10 +3,13 @@ using System.Collections;
 
 public class Bullet : MonoBehaviour {
 
+	public enum Ownership { Player, Enemy }
 	public GameObject player;
 	public float moveSpeed = 0.5f;
 	private Vector3 moveDirection;
 	private bool isSpawned;
+	private Ownership m_type;
+	private int m_damage;
 
 	// Use this for initialization
 	void Start () {
@@ -26,12 +29,10 @@ public class Bullet : MonoBehaviour {
 		}
 	}
 
-	public void Spawn() {
-		Spawn(player.transform.position, Input.mousePosition, true);
-	}
-
-	public void Spawn(Vector3 position, Vector3 target, bool isMouseLocation = false) {
-		isSpawned = true;
+	public void Spawn(Vector3 position, Vector3 target, Ownership type, int damage, bool isMouseLocation = false) {
+		m_damage = damage;
+		m_type = type;
+		SetActive();
 		transform.position = position;
 
 		if (isMouseLocation) {
@@ -48,7 +49,7 @@ public class Bullet : MonoBehaviour {
 	}
 
 	void Despawn() {
-		isSpawned = false;
+		SetInactive();
 		transform.position = transform.parent.transform.position;
 	}
 
@@ -62,5 +63,34 @@ public class Bullet : MonoBehaviour {
 
 	public bool GetActive() {
 		return isSpawned;
+	}
+
+
+
+
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		CheckTriggerCollision(other);
+
+	}
+	void OnTriggerStay2D(Collider2D other)
+	{
+		CheckTriggerCollision(other);
+	}
+
+	void CheckTriggerCollision(Collider2D other) {
+
+		bool deSpawn = false;
+
+		if (other.tag == "Player" && m_type.Equals(Ownership.Enemy) && isSpawned) {
+			other.gameObject.GetComponent<Player>().LoseHealth(m_damage);
+		}
+		else if (other.tag == "Enemy" && m_type.Equals(Ownership.Player) && isSpawned) {
+			other.gameObject.GetComponent<EnemyAI>().LoseHealth(m_damage);
+		}
+
+		if (deSpawn) {
+			Despawn();
+		}
 	}
 }

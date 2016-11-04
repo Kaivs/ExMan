@@ -4,6 +4,7 @@ using System.Collections;
 public class Player : MonoBehaviour {
 
 	// Base member vars
+	private Animator m_anim;
 	private Rigidbody2D rb2d;
 	public float maxSpeed = 10;
 	public bool takingDamage = false;
@@ -22,12 +23,12 @@ public class Player : MonoBehaviour {
 
 
 	//Dmg pickup vars
-	private float dmgBoostAmount = 2;
+	private int dmgBoostAmount = 2;
 	private float dmgBoostTimer = 0;
 	private bool dmgUp = false;
 
 	// Weapon vars
-	public float damage = 1;
+	public int damage = 1;
 	public bool hasGun = false;
 	private int bulletCounter = 0;
 	public bool hasSword = false;
@@ -50,6 +51,8 @@ public class Player : MonoBehaviour {
 		hCamExtent = camera.GetComponent<Collider2D>().bounds.extents.x;
 		restrictedPos = transform.position;
 		BulletPool = GameManager.Instance.CreateObjectPool("bullet_player", GameManager.Instance.PlayerBulletPoolCount);
+
+		m_anim = GetComponent<Animator>();
 	}
 
 	void FixedUpdate() {
@@ -83,13 +86,28 @@ public class Player : MonoBehaviour {
 		
 		// Movement
 		rb2d.velocity = new Vector2 (hInput * maxSpeed, vInput * maxSpeed);
+		if (rb2d.velocity != Vector2.zero) {
+			m_anim.SetBool("isMoving", true);
+		}
+		else {
+			m_anim.SetBool("isMoving", false);			
+		}
 		RestrictMovement();
+	}
+
+	void OnTriggerStay2D(Collider2D other) {
+		if (attacking) {
+			if (other.gameObject.tag == "Enemy") {
+				other.gameObject.GetComponent<EnemyAI>().LoseHealth(damage);
+				// Deal damage to enemy
+			}
+		}
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
 		if (attacking) {
 			if (other.gameObject.tag == "Enemy") {
-				other.gameObject.GetComponent<EnemyAI>().Despawn();
+				other.gameObject.GetComponent<EnemyAI>().LoseHealth(damage);
 				// Deal damage to enemy
 			}
 		}
@@ -133,11 +151,11 @@ public class Player : MonoBehaviour {
 		//Drop weapon when counter runs out
 		if (bulletCounter <= 0) {
 			hasGun = false;
-			GetComponent<Animator>().SetBool("hasGun", false);
+			m_anim.SetBool("hasGun", false);
 		}
 		if (swordCounter <= 0) {
 			hasSword = false;
-			GetComponent<Animator>().SetBool("hasSword", false);			
+			m_anim.SetBool("hasSword", false);			
 		}
 
 		if (!hasSword && !hasGun) {	
@@ -153,7 +171,7 @@ public class Player : MonoBehaviour {
 		//GetComponent<Animator>().SetTrigger("shooting");		
 		for (int i = 0; i < BulletPool.Length; i++) {
 			if (!BulletPool[i].GetComponent<Bullet>().GetActive()) {
-				BulletPool[i].GetComponent<Bullet>().Spawn();
+				BulletPool[i].GetComponent<Bullet>().Spawn(transform.position, Input.mousePosition, Bullet.Ownership.Player, damage, true);
 				return;
 			}
 		}
@@ -186,7 +204,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public int GetHealth() {
-		return health;
+		return health < 0 ? 0 : health;
 	}
 
 	public void SpeedBoost() {
@@ -210,8 +228,8 @@ public class Player : MonoBehaviour {
 		hasGun = true;
 		hasSword = false;
 		Weapon = 1;
-		GetComponent<Animator>().SetBool("hasGun", true);
-		GetComponent<Animator>().SetBool("hasSword", false);
+		m_anim.SetBool("hasGun", true);
+		m_anim.SetBool("hasSword", false);
 		
 	}
 
@@ -224,8 +242,8 @@ public class Player : MonoBehaviour {
 		hasSword = true;
 		hasGun = false;
 		Weapon = 2;
-		GetComponent<Animator>().SetBool("hasSword", true);
-		GetComponent<Animator>().SetBool("hasGun", false);
+		m_anim.SetBool("hasSword", true);
+		m_anim.SetBool("hasGun", false);
 		
 	}
 }
