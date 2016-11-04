@@ -117,6 +117,10 @@ public class Player : MonoBehaviour {
 			GetComponent<Animator>().SetBool("hasSword", false);			
 		}
 
+		if (!hasSword && !hasGun) {	
+			Weapon = 0;
+		}
+
 	}
 
 
@@ -180,7 +184,11 @@ public class Player : MonoBehaviour {
 			bulletCounter = 20;
 		}
 		hasGun = true;
+		hasSword = false;
+		Weapon = 1;
 		GetComponent<Animator>().SetBool("hasGun", true);
+		GetComponent<Animator>().SetBool("hasSword", false);
+		
 	}
 
 	public void PickupSword() {
@@ -190,6 +198,10 @@ public class Player : MonoBehaviour {
 			swordCounter = 20;
 		}
 		hasSword = true;
+		hasGun = false;
+		Weapon = 2;
 		GetComponent<Animator>().SetBool("hasSword", true);
+		GetComponent<Animator>().SetBool("hasGun", false);
+		
 	}
 }
