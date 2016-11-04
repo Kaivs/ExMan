@@ -49,11 +49,15 @@ public class Bullet : MonoBehaviour {
 
 	void Despawn() {
 		isSpawned = false;
-		transform.position = new Vector3( -200, -200, 0);
+		transform.position = transform.parent.transform.position;
 	}
 
-	public void SetActive(bool active) {
-		isSpawned = active;
+	public void SetActive() {
+		isSpawned = true;
+	}
+
+	public void SetInactive() {
+		isSpawned = false;
 	}
 
 	public bool GetActive() {

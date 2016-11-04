@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour {
 
 	private Vector3 velocity = Vector3.zero;
 	private float smoothTime = 1f;
+
 	// Use this for initialization
 	void Start () {
 		playerPos = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z);

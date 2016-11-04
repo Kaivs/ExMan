@@ -14,13 +14,15 @@ public class GameManager : MonoBehaviour {
 
 
 
-	
-	int m_playerBulletPool = 20;
-	public int PlayerBulletPool { get { return m_playerBulletPool; } }
-	int m_enemyRatPool = 10;
-	public int EnemyRatPool { get { return m_enemyRatPool; } }
-	int m_enemyCockroachPool = 10;
-	public int EnemyCockroackPool { get { return m_enemyCockroachPool; } }
+	enum EnemyType { Rat }	
+	int m_playerBulletPoolCount = 20;
+	public int PlayerBulletPoolCount { get { return m_playerBulletPoolCount; } }
+	GameObject[] m_enemyRatPool;
+	int m_enemyRatPoolCount = 10;
+	public int EnemyRatPoolCount { get { return m_enemyRatPoolCount; } }
+	GameObject[] m_enemyCockroachPool;
+	int m_enemyCockroachPoolCount = 10;
+	public int EnemyCockroackPoolCount { get { return m_enemyCockroachPoolCount; } }
 
 	public GameObject[] prefabs;
 	public Transform m_gameObjectsPool;
@@ -31,13 +33,26 @@ public class GameManager : MonoBehaviour {
 
 		bool found = false;
 
-		for (int i = 0; i < prefabs.Length && !found; i++) {
-			if (prefabs[i].name.Equals(name)) {
-				for (int j = 0; j < pool.Length; j++) {
-					pool[j] = Instantiate(prefabs[i], new Vector3(-200, -200, 0), Quaternion.identity, m_gameObjectsPool) as GameObject;
-					pool[j].GetComponent<Bullet>().SetActive(false);
+		if (name.StartsWith("bullet_")) {
+			for (int i = 0; i < prefabs.Length && !found; i++) {
+				if (prefabs[i].name.Equals(name)) {
+					for (int j = 0; j < pool.Length; j++) {
+						pool[j] = Instantiate(prefabs[i], m_gameObjectsPool.position, Quaternion.identity, m_gameObjectsPool) as GameObject;
+						pool[j].GetComponent<Bullet>().SetInactive();
+					}
+					found = true;
 				}
-				found = true;
+			}
+		}
+		else if (name.StartsWith("enemy_")) {
+			for (int i = 0; i < prefabs.Length && !found; i++) {
+				if (prefabs[i].name.Equals(name)) {
+					for (int j = 0; j < pool.Length; j++) {
+						pool[j] = Instantiate(prefabs[i], m_gameObjectsPool.position, Quaternion.identity, m_gameObjectsPool) as GameObject;
+						pool[j].GetComponent<EnemyAI>().SetInactive();
+					}
+					found = true;
+				}
 			}
 		}
 		
@@ -54,7 +69,7 @@ public class GameManager : MonoBehaviour {
 
 
 	private Player m_player;
-	public Player GetPlayer { get { return m_player; } }
+	public Player Player { get { return m_player; } }
 	
 	// *** Player Checker *** //
 	public bool IsPlayerDead { get { return false /*To be changed soon!*/ ; } }
@@ -73,6 +88,12 @@ public class GameManager : MonoBehaviour {
 	public void IncrementWave(int newValue) { m_wave += newValue; }
 	public void DecrementWave() { DecrementWave(1); }
 	public void DecrementWave(int newValue) { m_wave -= newValue; }
+
+	
+
+	public float m_countdown;
+	public bool m_isPlaying;
+
 	
 
 //==========================================================================
@@ -92,14 +113,29 @@ public class GameManager : MonoBehaviour {
 			m_instance = this;
 		}
 		DontDestroyOnLoad(this.gameObject);
-		//lol
 	}
-
 
 	void Start() {
 
 		AcquireReferences();
 		Initialize();
+		
+		CreateEnemyPool();
+	}
+
+	void Update() {
+
+		if (m_isPlaying) {
+
+
+		}
+		else {
+			m_countdown -= Time.deltaTime;
+			if (m_countdown <= 0) {
+				m_isPlaying = true;
+				Spawn(EnemyType.Rat);
+			}
+		}
 	}
 
 
@@ -113,6 +149,22 @@ public class GameManager : MonoBehaviour {
 //		GameManager Functions - BEGIN
 //===========================================================================
 
+	void Spawn(EnemyType type) {
+		
+		if (type.Equals(EnemyType.Rat)) {
+			for (int i = 0; i < m_enemyRatPool.Length; i++) {
+				if (!m_enemyRatPool[i].GetComponent<EnemyAI>().IsActive) {
+					m_enemyRatPool[i].GetComponent<EnemyAI>().Spawn(transform.position);
+					return;
+				}
+			}
+		}
+	}
+
+	void CreateEnemyPool() {
+		m_enemyRatPool = CreateObjectPool("enemy_rat", EnemyRatPoolCount);
+	}
+
 	void AcquireReferences() {
 
 		m_gameObjectsPool = GameObject.FindGameObjectWithTag("Pool").GetComponent<Transform>();
@@ -124,6 +176,7 @@ public class GameManager : MonoBehaviour {
 		m_score = 0;
 		m_wave = 0;
 		m_isGameOver = false;
+		m_isPlaying = false;
 		// More variables soon
 	}
 

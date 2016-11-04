@@ -34,7 +34,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011140434182}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.323262, y: 0.62017447, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -53,4 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabs:
   - {fileID: 1000010620011338, guid: 9867b7eb587af0542a37f3209d4e4b8d, type: 2}
+  - {fileID: 1000013590040948, guid: 3af7f2b8f05d77a42883913d4513ba97, type: 2}
   m_gameObjectsPool: {fileID: 0}
+  m_countdown: 5
+  m_isPlaying: 0
