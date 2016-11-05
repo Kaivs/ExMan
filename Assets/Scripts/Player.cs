@@ -3,6 +3,16 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
+	// Audio Files
+	private AudioSource m_audioManager;
+	public AudioClip GunShot;
+	public AudioClip GunCock;
+	public AudioClip SwordSwing;
+	public AudioClip SwordDraw;
+	public AudioClip HealthPickUp;
+	public AudioClip SpeedPickUp;
+
+
 	// Base member vars
 	private Transform m_gunPos;
 	private Animator m_anim;
@@ -55,6 +65,8 @@ public class Player : MonoBehaviour {
 
 		m_anim = GetComponent<Animator>();
 		m_gunPos = transform.GetChild(0).GetComponent<Transform>();
+
+		m_audioManager = GetComponent<AudioSource>();
 	}
 
 	void Update() {		
@@ -200,6 +212,7 @@ public class Player : MonoBehaviour {
 				return;
 			}
 		}
+		m_audioManager.PlayOneShot(GunShot, .5f);
 	}
 
 	void Slash() {
@@ -207,6 +220,7 @@ public class Player : MonoBehaviour {
 		attacking = true;
 		attackTimer = Time.time;
 		// GetComponent<Animator>().SetTrigger("slashing");
+		m_audioManager.PlayOneShot(SwordSwing, .75f);
 	}
 
 	// Getters / Setters + Pickups
@@ -236,6 +250,7 @@ public class Player : MonoBehaviour {
 		spedUp = true;
 		speedBoostTimer = Time.time;
 		maxSpeed += speedBoostAmount;
+		m_audioManager.PlayOneShot(SpeedPickUp, .5f);
 	}
 
 	public void DamageBoost() {
@@ -255,7 +270,7 @@ public class Player : MonoBehaviour {
 		Weapon = 1;
 		m_anim.SetBool("hasGun", true);
 		m_anim.SetBool("hasSword", false);
-		
+		m_audioManager.PlayOneShot(GunCock, .5f);		
 	}
 
 	public void PickupSword() {
@@ -269,6 +284,7 @@ public class Player : MonoBehaviour {
 		Weapon = 2;
 		m_anim.SetBool("hasSword", true);
 		m_anim.SetBool("hasGun", false);
+		m_audioManager.PlayOneShot(SwordDraw, .5f);		
 		
 	}
 }
