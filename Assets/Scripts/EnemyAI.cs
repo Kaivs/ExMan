@@ -24,6 +24,7 @@ public class EnemyAI : MonoBehaviour {
 	[SerializeField] float m_turnSpeed;
 	
 	[SerializeField] int m_damage;
+	[SerializeField] int m_healthMax;
 	[SerializeField] int m_health;
 
 	[SerializeField] float m_attackSpeed;
@@ -84,6 +85,7 @@ public class EnemyAI : MonoBehaviour {
 
 		m_isDead = false;
 		m_isActive = false;
+		m_health = m_healthMax;
 		
 		m_behaviour = State.Seek;
 		m_speedType = MovementSpeed.Default;
@@ -186,14 +188,15 @@ public class EnemyAI : MonoBehaviour {
 
 	// SPAWN Related
 	public void Spawn(Vector3 position) {
-
+		GameManager.Instance.m_activeEnemy += 1;
 		m_isActive = true;
 		transform.position = position;
 		transform.rotation = Quaternion.LookRotation(Vector3.forward, m_targetPosition - m_transform.position);
 	}
 
 	public void Despawn() {
-
+		GameManager.Instance.m_activeEnemy -= 1;
+		GameManager.Instance.IncrementKillCount();
 		m_isActive = false;
 		transform.position = transform.parent.transform.position;	
 
@@ -214,4 +217,6 @@ public class EnemyAI : MonoBehaviour {
 		m_health -= newValue;
 		CheckIfDead();
 	}
+
+	public bool IsDead { get { return m_behaviour.Equals(State.Dead); } }
 }

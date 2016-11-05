@@ -77,6 +77,11 @@ public class GameManager : MonoBehaviour {
 	}
 
 
+    private Collider2D m_background;
+    private float m_pickupTimer;
+	public int m_activeEnemy;
+	public bool m_spawnEnemy;
+
 
 
 
@@ -88,6 +93,9 @@ public class GameManager : MonoBehaviour {
 	private Player m_player;
 	public Player Player { get { return m_player; } }	
 	public bool IsPlayerDead { get { return false /*To be changed soon!*/ ; } }
+	private int m_killCount;
+	public int KillCount { get { return m_killCount; } }
+	public void IncrementKillCount() { m_killCount += 1; }
 
 
 
@@ -133,22 +141,35 @@ public class GameManager : MonoBehaviour {
 	void Start() {
 
 		AcquireReferences();
-		Initialize();
-		
+		Initialize();		
 		CreateEnemyPool();
 	}
 
 	void Update() {
 
+		// IF :: PLAYING = TRUE
 		if (m_isPlaying) {
 
+			SpawnPickups();
 
+			if (m_spawnEnemy) {		
+				for (int i = 0; i < m_wave; i++) {		
+					Spawn(GetRandomEnemy());
+				}
+				m_spawnEnemy = false;
+			}
+			if (m_activeEnemy <= 0) {
+				m_spawnEnemy = true;
+				m_wave += 1;
+			}
 		}
+		// IF :: PLAYING = FALSE
 		else {
+
 			m_countdown -= Time.deltaTime;
 			if (m_countdown <= 0) {
 				m_isPlaying = true;
-				Spawn(EnemyType.Cockroach);
+				Spawn(GetRandomEnemy());
 			}
 		}
 	}
@@ -185,7 +206,7 @@ public class GameManager : MonoBehaviour {
 	void SpawnFromPool(GameObject[] pool) {
 		for (int i = 0; i < pool.Length; i++) {
 			if (!pool[i].GetComponent<EnemyAI>().IsActive) {
-				pool[i].GetComponent<EnemyAI>().Spawn(transform.position);
+				pool[i].GetComponent<EnemyAI>().Spawn(GetRandomWorldLocation());
 				return;
 			}
 		}
@@ -197,9 +218,10 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void AcquireReferences() {
-
+		
 		m_gameObjectsPool = GameObject.FindGameObjectWithTag("Pool").GetComponent<Transform>();
 		m_player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        m_background = GameObject.Find("Background").GetComponent<Collider2D>();    
 	}
 
 	void Initialize() {
@@ -208,6 +230,8 @@ public class GameManager : MonoBehaviour {
 		m_wave = 1;
 		m_isGameOver = false;
 		m_isPlaying = false;
+		m_pickupTimer = 0;
+		m_spawnEnemy = false;
 		// More variables soon
 	}
 
@@ -223,6 +247,39 @@ public class GameManager : MonoBehaviour {
 
 	void CheckGameOverCondition() {
 		// TODO: Handles the gameOver condition
+	}
+	void SpawnPickups() {
+    Vector2 randomPos = new Vector2(Random.Range(m_background.bounds.center.x - m_background.bounds.extents.x, m_background.bounds.size.x),
+                                        Random.Range(m_background.bounds.center.y - m_background.bounds.extents.y, m_background.bounds.size.y));
+        if (Time.time - m_pickupTimer > 3) {
+            switch(Random.Range(1,5)) {
+                case 1:
+                    //Gun pickup spawn              
+                    Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Gun"), randomPos, Quaternion.identity);
+                    break;
+                case 2:
+                    //Sword pickup spawn
+                    Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Sword"), randomPos, Quaternion.identity);
+                    break;
+                case 3:
+                    //Health pickup spawn
+                    Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Health"), randomPos, Quaternion.identity);
+                    break;
+                case 4:
+                    //Speed pickup spawn
+                    Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Speed"), randomPos, Quaternion.identity);
+                    break;
+                case 5:
+                    //Damage pickup spawn
+                    Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Damage"), randomPos, Quaternion.identity);
+                    break;
+            }
+            m_pickupTimer = Time.time;
+        }
+    }
+	Vector2 GetRandomWorldLocation() {
+		return new Vector2(Random.Range(m_background.bounds.center.x - m_background.bounds.extents.x, m_background.bounds.size.x),
+                                        Random.Range(m_background.bounds.center.y - m_background.bounds.extents.y, m_background.bounds.size.y));
 	}
 
 //===========================================================================

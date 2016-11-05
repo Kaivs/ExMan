@@ -79,12 +79,16 @@ public class Bullet : MonoBehaviour {
 		bool deSpawn = false;
 
 		if (other.tag == "Player" && m_type.Equals(Ownership.Enemy) && isSpawned) {
-			other.gameObject.GetComponent<Player>().LoseHealth(m_damage);
+			Player script = other.gameObject.GetComponent<Player>();
+			script.LoseHealth(m_damage);
 			deSpawn = true;
 		}
 		else if (other.tag == "Enemy" && m_type.Equals(Ownership.Player) && isSpawned) {
-			other.gameObject.GetComponent<EnemyAI>().LoseHealth(m_damage);
-			deSpawn = true;
+			EnemyAI script = other.gameObject.GetComponent<EnemyAI>();
+			if (!script.IsDead) {
+				script.LoseHealth(m_damage);
+				deSpawn = true;
+			}
 		}
 
 		if (deSpawn) {

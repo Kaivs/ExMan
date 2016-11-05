@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class GUI : MonoBehaviour {
 	private Player m_player;
 	public int m_currentWave;
+	public Text m_waveText;
 	public Sprite[] HeartSprites;
 	public Sprite[] Weapon;
 	public Image HeartUI;
@@ -42,5 +43,6 @@ public class GUI : MonoBehaviour {
 	void Update () {
 		HeartUI.sprite = HeartSprites[m_player.GetHealth()];
 		WeaponUI.sprite = Weapon[m_player.Weapon];
+		m_waveText.text = "Wave: " + GameManager.Instance.CurrentWave;
 	}
 }
