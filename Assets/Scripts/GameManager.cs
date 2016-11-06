@@ -22,9 +22,17 @@ public class GameManager : MonoBehaviour {
 	GameObject[] m_enemyCockroachPool;
 	int m_enemyCockroachPoolCount = 10;
 	public int EnemyCockroackPoolCount { get { return m_enemyCockroachPoolCount; } }
-
 	public GameObject[] prefabs;
 	public Transform m_gameObjectsPool;
+
+	// References for spawning prefabs
+	private GameObject m_gunPickup;
+	private GameObject m_swordPickup;
+	private GameObject m_healthPickup;
+	private GameObject m_speedPickup;
+	private GameObject m_dmgPickup;
+	private Collider2D m_background;
+	private float pickupTimer = 0;
 
 	public GameObject[] CreateObjectPool(string name, int count) {
 
@@ -79,11 +87,17 @@ public class GameManager : MonoBehaviour {
 	public bool IsGameOver { get { return m_isGameOver; } }
 	int m_score;
 	public int CurrentScore { get { return m_score; } }
-	public void IncrementScore(int newValue) { m_score += newValue; }
-	public void DecrementScore(int newValue) { m_score -= newValue; }
 	int m_wave;
 	public int CurrentWave { get { return m_wave; } }
-	public void IncrementWave() { IncrementWave(1); }
+
+	int m_killCount;
+	public void IncrementWave() { 
+		if (m_killCount * m_wave > 10 * m_wave) {
+			IncrementWave(1); 
+		}
+	}
+
+	public void IncrementKills() { m_killCount += 1; }
 	public void IncrementWave(int newValue) { m_wave += newValue; }
 	public void DecrementWave() { DecrementWave(1); }
 	public void DecrementWave(int newValue) { m_wave -= newValue; }
@@ -125,8 +139,8 @@ public class GameManager : MonoBehaviour {
 	void Update() {
 
 		if (m_isPlaying) {
-
-
+			SpawnPickups();
+			IncrementWave();
 		}
 		else {
 			m_countdown -= Time.deltaTime;
@@ -175,7 +189,8 @@ public class GameManager : MonoBehaviour {
 	void AcquireReferences() {
 
 		m_gameObjectsPool = GameObject.FindGameObjectWithTag("Pool").GetComponent<Transform>();
-		m_player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		m_player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();	
+		m_background = GameObject.Find("Background").GetComponent<Collider2D>();	
 	}
 
 	void Initialize() {
@@ -199,6 +214,39 @@ public class GameManager : MonoBehaviour {
 
 	void CheckGameOverCondition() {
 		// TODO: Handles the gameOver condition
+	}
+
+	void SpawnPickups() {
+		if (Time.time - pickupTimer > 15) {
+
+			Vector2 randomPos = new Vector2(Random.Range(m_background.bounds.center.x - m_background.bounds.extents.x, m_background.bounds.size.x),
+											Random.Range(m_background.bounds.center.y - m_background.bounds.extents.y, m_background.bounds.size.y));
+
+			switch(Random.Range(1,5)) {
+				case 1:
+					//Gun pickup spawn				
+					m_gunPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Gun"), randomPos, Quaternion.identity) as GameObject;
+					break;
+				case 2:
+					//Sword pickup spawn
+					m_swordPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Sword"), randomPos, Quaternion.identity) as GameObject;
+					break;
+				case 3:
+					//Health pickup spawn
+					m_healthPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Health"), randomPos, Quaternion.identity) as GameObject;
+					break;
+				case 4:
+					//Speed pickup spawn
+					m_speedPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Speed"), randomPos, Quaternion.identity) as GameObject;
+					break;
+				case 5:
+					//Damage pickup spawn
+					m_dmgPickup = Instantiate(Resources.Load("Prefabs/Pickups/Pickup - Damage"), randomPos, Quaternion.identity) as GameObject;
+					break;
+			}
+			pickupTimer = Time.time;
+
+		}
 	}
 
 //===========================================================================
