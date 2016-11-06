@@ -8,8 +8,10 @@ public class GUI : MonoBehaviour {
 	public Text m_waveText;
 	public Sprite[] HeartSprites;
 	public Sprite[] Weapon;
+	public Sprite[] Speed;
 	public Image HeartUI;
 	public Image WeaponUI;
+	public Image SpeedUI;
 
 	// public int PlayerHealth{
 	// 	get{ return m_player.Health;}
@@ -43,6 +45,7 @@ public class GUI : MonoBehaviour {
 	void Update () {
 		HeartUI.sprite = HeartSprites[m_player.GetHealth()];
 		WeaponUI.sprite = Weapon[m_player.Weapon];
+		SpeedUI.sprite = Speed[m_player.isSpedUp()];
 		m_waveText.text = "Wave: " + GameManager.Instance.CurrentWave;
 	}
 }

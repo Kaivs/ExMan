@@ -249,8 +249,8 @@ public class GameManager : MonoBehaviour {
 		// TODO: Handles the gameOver condition
 	}
 	void SpawnPickups() {
-    Vector2 randomPos = new Vector2(Random.Range(m_background.bounds.center.x - m_background.bounds.extents.x, m_background.bounds.size.x),
-                                        Random.Range(m_background.bounds.center.y - m_background.bounds.extents.y, m_background.bounds.size.y));
+    	Vector2 randomPos = new Vector2(Random.Range(m_background.bounds.center.x - m_background.bounds.extents.x, m_background.bounds.center.x + m_background.bounds.extents.x),
+										Random.Range(m_background.bounds.center.y - m_background.bounds.extents.y, m_background.bounds.center.y + m_background.bounds.extents.y));
         if (Time.time - m_pickupTimer > 3) {
             switch(Random.Range(1,5)) {
                 case 1:

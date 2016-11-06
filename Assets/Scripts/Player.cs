@@ -115,10 +115,6 @@ public class Player : MonoBehaviour {
 		rb2d.velocity = new Vector2 (hInput * maxSpeed, vInput * maxSpeed);
 	}
 
-	void LateUpdate()
-	{		
-	}
-
 	void FixedUpdate() {
 		RestrictMovement();		
 	}
@@ -225,9 +221,13 @@ public class Player : MonoBehaviour {
 
 	// Getters / Setters + Pickups
 	// ====================================
-	
-	void TakeDamage(){
 
+	public int isSpedUp() {
+		if (spedUp) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 
 	public Quaternion GetRotation() {
@@ -236,10 +236,22 @@ public class Player : MonoBehaviour {
 
 	public void AddHealth(int amount) {
 		health += amount;
+		if (health > 10) {
+			health = 10;
+		}
 	}
 
 	public void LoseHealth(int amount) {
-		health -= amount;
+		health -= amount;		
+		if (health < 0) {
+			health = 0;
+		}
+	}
+
+	public void Die() {
+		if (health <= 0) {
+			Instantiate("Assets/")
+		}
 	}
 
 	public int GetHealth() {
@@ -247,16 +259,20 @@ public class Player : MonoBehaviour {
 	}
 
 	public void SpeedBoost() {
-		spedUp = true;
-		speedBoostTimer = Time.time;
-		maxSpeed += speedBoostAmount;
+		if (!spedUp) {
+			spedUp = true;
+			maxSpeed += speedBoostAmount;
+		}
+		speedBoostTimer = Time.time;		
 		m_audioManager.PlayOneShot(SpeedPickUp, .5f);
 	}
 
 	public void DamageBoost() {
-		dmgUp = true;
+		if (!dmgUp) {
+			dmgUp = true;
+			damage *= dmgBoostAmount;
+		}
 		dmgBoostTimer = Time.time;
-		damage *= dmgBoostAmount;
 	}
  
 	public void PickupGun() {
