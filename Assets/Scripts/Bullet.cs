@@ -44,6 +44,7 @@ public class Bullet : MonoBehaviour {
 		else {
 			moveDirection.x = (target.x - transform.position.x);
 			moveDirection.y = (target.y - transform.position.y);
+			transform.eulerAngles = new Vector3(0,0,Mathf.Atan2((target.y - transform.position.y), (target.x - transform.position.x))*Mathf.Rad2Deg - 90); 
 		}
 
 		moveDirection = moveDirection.normalized;

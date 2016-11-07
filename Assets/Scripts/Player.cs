@@ -205,13 +205,16 @@ public class Player : MonoBehaviour {
 
 	void Shoot() {
 		bulletCounter--;
+
+		bool shoot = false;
 		//GetComponent<Animator>().SetTrigger("shooting");		
-		for (int i = 0; i < BulletPool.Length; i++) {
+		for (int i = 0; i < BulletPool.Length && !shoot; i++) {
 			if (!BulletPool[i].GetComponent<Bullet>().GetActive()) {
 				BulletPool[i].GetComponent<Bullet>().Spawn(m_gunPos.position, Input.mousePosition, Bullet.Ownership.Player, damage, true);
-				return;
+				shoot = true;
 			}
 		}
+		
 		m_audioManager.PlayOneShot(GunShot, .5f);
 	}
 

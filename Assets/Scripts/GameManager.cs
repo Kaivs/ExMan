@@ -13,10 +13,17 @@ public class GameManager : MonoBehaviour {
 
 
 
-	enum EnemyType { Rat, Cockroach }	
-	EnemyType GetRandomEnemy() {
+	enum EnemyType { Rat, Cockroach, Scorpion }	
+	EnemyType GetRandomEnemy(int enemyType = -1) {
 		EnemyType type;
-		int enemy = Random.Range(0, 2);
+
+		int enemy;
+		if (enemyType == -1) {
+			enemy = Random.Range(0, 3);
+		}
+		else {
+			enemy = enemyType;
+		}
 
 		switch (enemy) {
 			case 0:
@@ -24,6 +31,9 @@ public class GameManager : MonoBehaviour {
 			break;
 			case 1:
 			type = EnemyType.Cockroach;
+			break;
+			case 2:
+			type = EnemyType.Scorpion;
 			break;
 			default:
 			type = EnemyType.Rat;
@@ -34,12 +44,17 @@ public class GameManager : MonoBehaviour {
 	}
 	int m_playerBulletPoolCount = 20;
 	public int PlayerBulletPoolCount { get { return m_playerBulletPoolCount; } }
+	int m_scorpionBulletPoolCount = 4;
+	public int ScorpionBulletPoolCount { get { return m_scorpionBulletPoolCount; } }
 	GameObject[] m_enemyRatPool;
 	int m_enemyRatPoolCount = 10;
 	public int EnemyRatPoolCount { get { return m_enemyRatPoolCount; } }
 	GameObject[] m_enemyCockroachPool;
 	int m_enemyCockroachPoolCount = 10;
 	public int EnemyCockroackPoolCount { get { return m_enemyCockroachPoolCount; } }
+	GameObject[] m_enemyScorpionPool;
+	int m_enemyScorpionPoolCount = 10;
+	public int EnemyScorpionPoolCount { get { return m_enemyScorpionPoolCount; } }
 
 	public GameObject[] prefabs;
 	public Transform m_gameObjectsPool;
@@ -142,6 +157,7 @@ public class GameManager : MonoBehaviour {
 
 		AcquireReferences();
 		Initialize();		
+
 		CreateEnemyPool();
 	}
 
@@ -154,7 +170,7 @@ public class GameManager : MonoBehaviour {
 
 			if (m_spawnEnemy) {		
 				for (int i = 0; i < m_wave; i++) {		
-					Spawn(GetRandomEnemy());
+					SpawnEnemyByWave();
 				}
 				m_spawnEnemy = false;
 			}
@@ -169,7 +185,7 @@ public class GameManager : MonoBehaviour {
 			m_countdown -= Time.deltaTime;
 			if (m_countdown <= 0) {
 				m_isPlaying = true;
-				Spawn(GetRandomEnemy());
+				SpawnEnemyByWave();
 			}
 		}
 	}
@@ -193,6 +209,20 @@ public class GameManager : MonoBehaviour {
 //		GameManager Functions - BEGIN
 //===========================================================================
 
+	void SpawnEnemyByWave() {
+
+		int max = 1;
+		if (m_wave > 3) {
+			max += 1;
+		}
+		if (m_wave > 6) {
+			max += 1;
+		}
+		int randomEnemy = Random.Range(0, max);
+
+		Spawn(GetRandomEnemy(randomEnemy));
+	}
+
 	void Spawn(EnemyType type) {
 		
 		if (type.Equals(EnemyType.Rat)) {
@@ -200,6 +230,9 @@ public class GameManager : MonoBehaviour {
 		}
 		else if (type.Equals(EnemyType.Cockroach)) {
 			SpawnFromPool(m_enemyCockroachPool);			
+		}
+		else if (type.Equals(EnemyType.Scorpion)) {
+			SpawnFromPool(m_enemyScorpionPool);
 		}
 	}
 
@@ -215,6 +248,7 @@ public class GameManager : MonoBehaviour {
 	void CreateEnemyPool() {
 		m_enemyRatPool = CreateObjectPool("enemy_rat", EnemyRatPoolCount);
 		m_enemyCockroachPool = CreateObjectPool("enemy_cockroach", EnemyCockroackPoolCount);
+		m_enemyScorpionPool = CreateObjectPool("enemy_scorpion", EnemyScorpionPoolCount);
 	}
 
 	void AcquireReferences() {
