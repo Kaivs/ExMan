@@ -10,7 +10,7 @@ public class MenuButton : MonoBehaviour {
 
 
 	void Start() {
-		
+
 		int score = GameManager.Instance.CurrentWave;
 
 		m_score.text = m_score.text + " " + score;
@@ -31,10 +31,12 @@ public class MenuButton : MonoBehaviour {
 		Invoke("GoToMenu", 1);
 	}
 	public void GoToMenu() {
+		ResetGameManager();
 		SceneManager.LoadScene("MainMenu");
 	}
 
 	public void GoToPlay() {
+		ResetGameManager();
 		SceneManager.LoadScene("Main");
 	}	
 
@@ -47,6 +49,12 @@ public class MenuButton : MonoBehaviour {
 			UnityEditor.EditorApplication.isPlaying = false;
 		#endif
 		Application.Quit();
+	}
+
+	void ResetGameManager() {
+		if (GameManager.Instance != null) {
+			DestroyObject(GameManager.Instance.gameObject);
+		}
 	}
 }
 
