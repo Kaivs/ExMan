@@ -123,6 +123,7 @@ public class Player : MonoBehaviour {
 		else {
 			deadCoolDown -= Time.deltaTime;
 			if (deadCoolDown <= 0) {
+				GameManager.Instance.GameOver();
 				SceneManager.LoadScene("GameOver");
 			}
 		}
@@ -137,7 +138,7 @@ public class Player : MonoBehaviour {
 	void OnTriggerStay2D(Collider2D other) {
 		if (attacking) {
 			if (other.gameObject.tag == "Enemy") {
-				other.gameObject.GetComponent<EnemyAI>().LoseHealth(damage);
+				other.gameObject.GetComponent<EnemyAI>().LoseHealth(Damage());
 				// Deal damage to enemy
 				attacking = false;
 			}
@@ -147,7 +148,7 @@ public class Player : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other) {
 		if (attacking) {
 			if (other.gameObject.tag == "Enemy") {
-				other.gameObject.GetComponent<EnemyAI>().LoseHealth(damage);
+				other.gameObject.GetComponent<EnemyAI>().LoseHealth(Damage());
 				// Deal damage to enemy
 				attacking = false;
 			}
@@ -170,6 +171,15 @@ public class Player : MonoBehaviour {
 
 		transform.position = restrictedPos;
 		
+	}
+
+	int Damage() {
+		if (hasSword) {
+			return 2;
+		}
+		else {
+			return damage;
+		}
 	}
 
 
@@ -220,7 +230,7 @@ public class Player : MonoBehaviour {
 		bool bulletFly = false;
 		for (int i = 0; i < BulletPool.Length && !bulletFly; i++) {
 			if (!BulletPool[i].GetComponent<Bullet>().GetActive()) {
-				BulletPool[i].GetComponent<Bullet>().Spawn(m_gunPos.position, Input.mousePosition, Bullet.Ownership.Player, damage, true);
+				BulletPool[i].GetComponent<Bullet>().Spawn(m_gunPos.position, Input.mousePosition, Bullet.Ownership.Player, Damage(), true);
 				bulletFly = true;
 			}
 		}
@@ -261,15 +271,15 @@ public class Player : MonoBehaviour {
 		if (!m_isDead) {
 			health -= amount;		
 			if (health <= 0) {
-				GameManager.Instance.GameOver();
-				SceneManager.LoadScene("GameOver");
+				Die();
 			}
 		}
 	}
 
 	public void Die() {
 		m_isDead = true;
-			
+		GetComponent<SpriteRenderer>().enabled = false;
+		Instantiate(Resources.Load("Prefabs/Particles/BloodSplat"), transform.position, Quaternion.identity);			
 	}
 
 	public int GetHealth() {
