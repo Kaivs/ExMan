@@ -31,7 +31,7 @@ public class EnemyAI : MonoBehaviour {
 
 	[SerializeField] float m_attackSpeed;
 	const float ATTACK_COOLDOWN_MAX = 5f;
-	float m_attackCooldown = 0;
+	public float m_attackCooldown = 0;
 	public float m_attackRange = 0.5f;
 
 	// Unity Components

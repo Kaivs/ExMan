@@ -11,19 +11,21 @@ public class MenuButton : MonoBehaviour {
 
 	void Start() {
 
-		int score = GameManager.Instance.CurrentWave;
+		if (SceneManager.GetActiveScene().name.Equals("GameOver")) {
+			int score = GameManager.Instance.CurrentWave;
 
-		m_score.text = m_score.text + " " + score;
-		
-		int highscore = PlayerPrefs.GetInt("highscore");
+			m_score.text = m_score.text + " " + score;
+			
+			int highscore = PlayerPrefs.GetInt("highscore");
 
-		if (score > highscore) {
-			PlayerPrefs.SetInt("highscore", score);
+			if (score > highscore) {
+				PlayerPrefs.SetInt("highscore", score);
+			}
+
+			highscore = PlayerPrefs.GetInt("highscore");
+
+			m_hScore.text = m_hScore.text + " " + highscore;
 		}
-
-		highscore = PlayerPrefs.GetInt("highscore");
-
-		m_hScore.text = m_hScore.text + " " + highscore;
 	}
 
 

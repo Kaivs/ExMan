@@ -162,29 +162,31 @@ public class GameManager : MonoBehaviour {
 
 	void Update() {
 
+		if (!m_isGameOver) {
 		// IF :: PLAYING = TRUE
-		if (m_isPlaying) {
+			if (m_isPlaying) {
 
-			SpawnPickups();
+				SpawnPickups();
 
-			if (m_spawnEnemy) {		
-				for (int i = 0; i < m_wave; i++) {		
-					SpawnEnemyByWave();
+				if (m_spawnEnemy) {		
+					for (int i = 0; i < m_wave; i++) {		
+						SpawnEnemyByWave();
+					}
+					m_spawnEnemy = false;
 				}
-				m_spawnEnemy = false;
+				if (m_activeEnemy <= 0) {
+					m_spawnEnemy = true;
+					m_wave += 1;
+				}
 			}
-			if (m_activeEnemy <= 0) {
-				m_spawnEnemy = true;
-				m_wave += 1;
-			}
-		}
-		// IF :: PLAYING = FALSE
-		else {
+			// IF :: PLAYING = FALSE
+			else {
 
-			m_countdown -= Time.deltaTime;
-			if (m_countdown <= 0) {
-				m_isPlaying = true;
-				SpawnEnemyByWave();				
+				m_countdown -= Time.deltaTime;
+				if (m_countdown <= 0) {
+					m_isPlaying = true;
+					SpawnEnemyByWave();				
+				}
 			}
 		}
 	}
@@ -214,6 +216,10 @@ public class GameManager : MonoBehaviour {
 	
 	void ManageWave() {
 
+	}
+
+	public void GameOver() {
+		m_isGameOver = true;
 	}
 
 

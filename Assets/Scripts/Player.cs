@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
 
@@ -11,6 +12,7 @@ public class Player : MonoBehaviour {
 	public AudioClip SwordDraw;
 	public AudioClip HealthPickUp;
 	public AudioClip SpeedPickUp;
+	public bool m_isDead;
 
 
 	// Base member vars
@@ -52,10 +54,14 @@ public class Player : MonoBehaviour {
 	public int health = 12;	
 	public int Weapon;
 
+	public float deadCoolDown = 2f;
+
+
 	// Main logic 
 	// ==================================
 
 	void Start () {
+		m_isDead = false;
 		rb2d = GetComponent<Rigidbody2D>();
 
 		vCamExtent = m_camera.GetComponent<Collider2D>().bounds.extents.y;
@@ -70,53 +76,62 @@ public class Player : MonoBehaviour {
 	}
 
 	void Update() {		
-		
-		// Movement and Attacking
-		float hInput = Input.GetAxis ("Horizontal");
-		float vInput = Input.GetAxis ("Vertical");
+		if (!m_isDead) {
+			// Movement and Attacking
+			float hInput = Input.GetAxis ("Horizontal");
+			float vInput = Input.GetAxis ("Vertical");
 
-		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-		// Deactivate Speed boost after timer
-		if (spedUp && (Time.time - speedBoostTimer > 10)) {
-			maxSpeed -= speedBoostAmount;
-			spedUp = false;
-		}
+			// Deactivate Speed boost after timer
+			if (spedUp && (Time.time - speedBoostTimer > 10)) {
+				maxSpeed -= speedBoostAmount;
+				spedUp = false;
+			}
 
-		// Deactivate dmg boost after timer
-		if (dmgUp && (Time.time - dmgBoostTimer > 10)) {
-			damage /= dmgBoostAmount;
-			dmgUp = false;
-		}
+			// Deactivate dmg boost after timer
+			if (dmgUp && (Time.time - dmgBoostTimer > 10)) {
+				damage /= dmgBoostAmount;
+				dmgUp = false;
+			}
 
-		//Deactivate attacking hitbox after attacking animation runs
-		if (Time.time - attackTimer > 1 /* seconds */) {
-			attacking = false;
-		}
+			//Deactivate attacking hitbox after attacking animation runs
+			if (Time.time - attackTimer > 1 /* seconds */) {
+				attacking = false;
+			}
 
 
-		m_anim.SetBool("isAttacking", false);
-		
-		bool attack = Input.GetMouseButtonDown(0);
-		if(attack) { Attack(); }
-		
-		if (rb2d.velocity != Vector2.zero) {
-			m_anim.SetBool("isMoving", true);
+			m_anim.SetBool("isAttacking", false);
+			
+			bool attack = Input.GetMouseButtonDown(0);
+			if(attack) { Attack(); }
+			
+			if (rb2d.velocity != Vector2.zero) {
+				m_anim.SetBool("isMoving", true);
+			}
+			else {
+				m_anim.SetBool("isMoving", false);			
+			}
+			
+
+			//Rotation to mousePos
+			rb2d.transform.eulerAngles = new Vector3(0,0,Mathf.Atan2((mousePos.y - transform.position.y), (mousePos.x - transform.position.x))*Mathf.Rad2Deg - 90);
+
+			// Movement
+			rb2d.velocity = new Vector2 (hInput * maxSpeed, vInput * maxSpeed);
 		}
 		else {
-			m_anim.SetBool("isMoving", false);			
+			deadCoolDown -= Time.deltaTime;
+			if (deadCoolDown <= 0) {
+				SceneManager.LoadScene("GameOver");
+			}
 		}
-		
-
-		//Rotation to mousePos
-		rb2d.transform.eulerAngles = new Vector3(0,0,Mathf.Atan2((mousePos.y - transform.position.y), (mousePos.x - transform.position.x))*Mathf.Rad2Deg - 90);
-
-		// Movement
-		rb2d.velocity = new Vector2 (hInput * maxSpeed, vInput * maxSpeed);
 	}
 
 	void FixedUpdate() {
-		RestrictMovement();		
+		if (!m_isDead) {
+			RestrictMovement();		
+		}
 	}
 
 	void OnTriggerStay2D(Collider2D other) {
@@ -243,16 +258,18 @@ public class Player : MonoBehaviour {
 	}
 
 	public void LoseHealth(int amount) {
-		health -= amount;		
-		if (health < 0) {
-			health = 0;
+		if (!m_isDead) {
+			health -= amount;		
+			if (health <= 0) {
+				GameManager.Instance.GameOver();
+				SceneManager.LoadScene("GameOver");
+			}
 		}
 	}
 
 	public void Die() {
-		if (health <= 0) {
-			// Instantiate("Assets/")
-		}
+		m_isDead = true;
+			
 	}
 
 	public int GetHealth() {
