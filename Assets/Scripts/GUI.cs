@@ -45,7 +45,7 @@ public class GUI : MonoBehaviour {
 	void Update () {
 		HeartUI.sprite = HeartSprites[m_player.GetHealth()];
 		WeaponUI.sprite = Weapon[m_player.Weapon];
-		SpeedUI.sprite = Speed[m_player.isSpedUp()];
+		// SpeedUI.sprite = Speed[m_player.isSpedUp()];
 		m_waveText.text = "Wave: " + GameManager.Instance.CurrentWave;
 	}
 }

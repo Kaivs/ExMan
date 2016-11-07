@@ -15,6 +15,7 @@ public class EnemyAI : MonoBehaviour {
 
 	enum State { Seek, Dead }
 	enum MovementSpeed { None, Default, Slow }
+	enum AttackType { Melee, Range }
 
 	[SerializeField] Transform m_targetTransform;
 	[SerializeField] Vector3 m_targetPosition;
@@ -26,6 +27,7 @@ public class EnemyAI : MonoBehaviour {
 	[SerializeField] int m_damage;
 	[SerializeField] int m_healthMax;
 	[SerializeField] int m_health;
+	[SerializeField] GameObject[] m_bulletPool;
 
 	[SerializeField] float m_attackSpeed;
 	const float ATTACK_COOLDOWN_MAX = 5f;
@@ -42,6 +44,7 @@ public class EnemyAI : MonoBehaviour {
 	bool m_isDead;
 	State m_behaviour;
 	MovementSpeed m_speedType;
+	AttackType m_attackType;
 
 
 //=====================================================
@@ -58,9 +61,9 @@ public class EnemyAI : MonoBehaviour {
 
 		if (m_isActive) {
 
+			UpdateAnimation();
 			UpdateTargetInformation();
 			InvokeBehaviour();
-			UpdateAnimation();
 		}
 		else {
 			if (m_targetTransform == null) {
@@ -76,9 +79,22 @@ public class EnemyAI : MonoBehaviour {
 	void AcquireReference() {
 
 		m_rb2d = GetComponent<Rigidbody2D>();
-		m_anim = transform.GetChild(0).GetComponent<Animator>();
-		
+		m_anim = transform.GetChild(0).GetComponent<Animator>();		
 		m_transform = GetComponent<Transform>();
+
+		if (name.StartsWith("enemy_scorpion")) {
+			m_bulletPool = GameManager.Instance.CreateObjectPool("bullet_scorpion", GameManager.Instance.ScorpionBulletPoolCount);		
+		}
+		else {
+			m_bulletPool = new GameObject[0];
+		}
+
+		if (m_bulletPool.Length.Equals(0)) {
+			m_attackType = AttackType.Melee;
+		}
+		else {
+			m_attackType = AttackType.Range;
+		}
 	}
 
 	void Initialize() {
@@ -100,7 +116,19 @@ public class EnemyAI : MonoBehaviour {
 		if (m_attackCooldown <= 0) {
 			m_attackCooldown = ATTACK_COOLDOWN_MAX;
 			m_anim.SetTrigger("attack");
-			GameManager.Instance.Player.LoseHealth(m_damage);
+			
+			if (m_attackType.Equals(AttackType.Range)) {
+				bool shoot = false;
+				for (int i = 0; i < m_bulletPool.Length && !shoot; i++) {
+					if (!m_bulletPool[i].GetComponent<Bullet>().GetActive()) {
+						m_bulletPool[i].GetComponent<Bullet>().Spawn(m_transform.position, m_targetPosition, Bullet.Ownership.Enemy, m_damage);
+						shoot = true;
+					}
+				}
+			}
+			else {
+				GameManager.Instance.Player.LoseHealth(m_damage);
+			}
 		}
 		else {
 			m_attackCooldown -= m_attackSpeed * Time.deltaTime;
@@ -188,6 +216,8 @@ public class EnemyAI : MonoBehaviour {
 
 	// SPAWN Related
 	public void Spawn(Vector3 position) {
+		// RE-INITIALIZE AFTER	
+		Initialize();
 		GameManager.Instance.m_activeEnemy += 1;
 		m_isActive = true;
 		transform.position = position;
@@ -199,9 +229,6 @@ public class EnemyAI : MonoBehaviour {
 		GameManager.Instance.IncrementKillCount();
 		m_isActive = false;
 		transform.position = transform.parent.transform.position;	
-
-		// RE-INITIALIZE AFTER	
-		Initialize();
 	}
 
 	void CheckIfDead() {
