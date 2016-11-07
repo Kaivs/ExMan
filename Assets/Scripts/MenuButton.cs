@@ -1,7 +1,30 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuButton : MonoBehaviour {
+
+
+	[SerializeField] Text m_score;
+	[SerializeField] Text m_hScore;
+
+
+	void Start() {
+		
+		int score = GameManager.Instance.CurrentWave;
+
+		m_score.text = m_score.text + " " + score;
+		
+		int highscore = PlayerPrefs.GetInt("highscore");
+
+		if (score > highscore) {
+			PlayerPrefs.SetInt("highscore", score);
+		}
+
+		highscore = PlayerPrefs.GetInt("highscore");
+
+		m_hScore.text = m_hScore.text + " " + highscore;
+	}
 
 
 	public void GoToMenuFromSplash() {
